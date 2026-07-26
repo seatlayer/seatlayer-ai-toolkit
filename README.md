@@ -27,6 +27,8 @@ the result.
   — typed Expo, iOS, and Android package with a runnable example.
 - [SeatLayer iOS SDK](https://github.com/seatlayer/seatlayer-ios) — public native
   SDK source and Swift Package Manager preview.
+- [SeatLayer Android SDK](https://github.com/seatlayer/seatlayer-android) —
+  native Kotlin view, coroutine controller, and secure AndroidX WebKit bridge.
 - [SeatLayer for Flutter](https://pub.dev/packages/seatlayer) — official Flutter
   package, with source at
   [seatlayer/seatlayer-flutter](https://github.com/seatlayer/seatlayer-flutter).
