@@ -1,5 +1,8 @@
 # SeatLayer AI Toolkit
 
+[![Validate](https://github.com/seatlayer/seatlayer-ai-toolkit/actions/workflows/ci.yml/badge.svg)](https://github.com/seatlayer/seatlayer-ai-toolkit/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/license-MIT-111827.svg)](LICENSE)
+
 Agent skills, diagnostics, and optional Designer MCP configuration for adding
 reserved seating to an existing application.
 
@@ -9,12 +12,22 @@ agent how to inspect a repository, select the right SeatLayer surface, load the
 smallest relevant live documentation set, implement the integration, and prove
 the result.
 
+[Build with agents](https://docs.seatlayer.io/agents/overview/) ·
+[Developer docs](https://docs.seatlayer.io/) ·
+[Demo hub](https://app.seatlayer.io/demo) ·
+[Website](https://seatlayer.io/developers/)
+
 ## SeatLayer ecosystem
 
 - [Developer documentation](https://docs.seatlayer.io/) — authoritative product
   contracts, guides, API references, and agent-readable Markdown.
 - [SeatLayer SDK](https://github.com/seatlayer/seatlayer-sdk) — official
   JavaScript and React package source.
+- [SeatLayer iOS SDK](https://github.com/seatlayer/seatlayer-ios) — public native
+  SDK source and Swift Package Manager preview.
+- [SeatLayer for Flutter](https://pub.dev/packages/seatlayer) — official Flutter
+  package, with source at
+  [seatlayer/seatlayer-flutter](https://github.com/seatlayer/seatlayer-flutter).
 - [SeatLayer on GitHub](https://github.com/seatlayer) — all public SeatLayer
   repositories.
 
@@ -146,3 +159,7 @@ npm run validate
 ```
 
 The repository intentionally has no runtime dependencies.
+
+## License
+
+MIT © SeatLayer
