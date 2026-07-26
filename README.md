@@ -9,6 +9,15 @@ agent how to inspect a repository, select the right SeatLayer surface, load the
 smallest relevant live documentation set, implement the integration, and prove
 the result.
 
+## SeatLayer ecosystem
+
+- [Developer documentation](https://docs.seatlayer.io/) — authoritative product
+  contracts, guides, API references, and agent-readable Markdown.
+- [SeatLayer SDK](https://github.com/seatlayer/seatlayer-sdk) — official
+  JavaScript and React package source.
+- [SeatLayer on GitHub](https://github.com/seatlayer) — all public SeatLayer
+  repositories.
+
 ## What is included
 
 - `integrate-seatlayer` — a portable Agent Skill for implementation, review,
