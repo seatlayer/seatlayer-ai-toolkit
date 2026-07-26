@@ -23,6 +23,8 @@ the result.
   contracts, guides, API references, and agent-readable Markdown.
 - [SeatLayer SDK](https://github.com/seatlayer/seatlayer-sdk) — official
   JavaScript and React package source.
+- [SeatLayer React Native SDK](https://github.com/seatlayer/seatlayer-react-native)
+  — typed Expo, iOS, and Android package with a runnable example.
 - [SeatLayer iOS SDK](https://github.com/seatlayer/seatlayer-ios) — public native
   SDK source and Swift Package Manager preview.
 - [SeatLayer for Flutter](https://pub.dev/packages/seatlayer) — official Flutter
