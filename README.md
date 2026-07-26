@@ -26,7 +26,7 @@ the result.
 Clone the repository:
 
 ```bash
-git clone https://github.com/paiteq/seatlayer-ai-toolkit.git
+git clone https://github.com/seatlayer/seatlayer-ai-toolkit.git
 cd seatlayer-ai-toolkit
 ```
 

@@ -7,7 +7,7 @@
     "url": "https://seatlayer.io"
   },
   "homepage": "https://docs.seatlayer.io/agents/overview/",
-  "repository": "https://github.com/paiteq/seatlayer-ai-toolkit",
+  "repository": "https://github.com/seatlayer/seatlayer-ai-toolkit",
   "license": "MIT",
   "keywords": [
     "seatlayer",
