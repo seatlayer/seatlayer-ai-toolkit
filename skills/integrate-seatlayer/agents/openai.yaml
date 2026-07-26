@@ -1,0 +1,4 @@
+interface:
+  display_name: "Integrate SeatLayer"
+  short_description: "Build and verify SeatLayer integrations"
+  default_prompt: "Use $integrate-seatlayer to add SeatLayer to this repository and verify the complete integration."

@@ -1,0 +1,38 @@
+{
+  "name": "seatlayer-ai-toolkit",
+  "version": "0.1.0",
+  "description": "Repository-first skills and diagnostics for safe SeatLayer integrations.",
+  "author": {
+    "name": "SeatLayer",
+    "url": "https://seatlayer.io"
+  },
+  "homepage": "https://docs.seatlayer.io/agents/overview/",
+  "repository": "https://github.com/paiteq/seatlayer-ai-toolkit",
+  "license": "MIT",
+  "keywords": [
+    "seatlayer",
+    "reserved-seating",
+    "agent-skills",
+    "codex",
+    "mcp"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "SeatLayer AI Toolkit",
+    "shortDescription": "Build and verify reserved-seating integrations.",
+    "longDescription": "Adds repository-first SeatLayer integration guidance, deterministic safety diagnostics, and the optional Designer MCP connection.",
+    "developerName": "SeatLayer",
+    "category": "Productivity",
+    "capabilities": [],
+    "websiteURL": "https://docs.seatlayer.io/agents/overview/",
+    "defaultPrompt": [
+      "Integrate SeatLayer into this repository.",
+      "Audit this SeatLayer integration before launch.",
+      "Verify the SeatLayer hold-to-book flow."
+    ],
+    "brandColor": "#F4B740",
+    "composerIcon": "./assets/icon.png",
+    "logo": "./assets/logo.png"
+  },
+  "mcpServers": "./.mcp.json"
+}

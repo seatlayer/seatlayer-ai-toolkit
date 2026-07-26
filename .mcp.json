@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "seatlayer-designer": {
+      "type": "http",
+      "url": "https://mcp.seatlayer.io/mcp"
+    }
+  }
+}

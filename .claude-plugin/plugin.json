@@ -1,0 +1,19 @@
+{
+  "name": "seatlayer",
+  "version": "0.1.0",
+  "description": "Repository-first skills and diagnostics for safe SeatLayer integrations.",
+  "author": {
+    "name": "SeatLayer",
+    "url": "https://seatlayer.io"
+  },
+  "homepage": "https://docs.seatlayer.io/agents/overview/",
+  "repository": "https://github.com/paiteq/seatlayer-ai-toolkit",
+  "license": "MIT",
+  "keywords": [
+    "seatlayer",
+    "reserved-seating",
+    "checkout",
+    "agent-skills",
+    "mcp"
+  ]
+}

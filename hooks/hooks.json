@@ -1,0 +1,16 @@
+{
+  "description": "Reminds Claude to consult SeatLayer's live contracts before editing integration code. Informational only.",
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "prompt",
+            "prompt": "This hook is informational only and must never block an edit. Inspect the target path and proposed content. If, and only if, source code touches SeatLayer SDK, API, holds, checkout, inventory, booking, webhooks, embedded Designer, control room, or MCP logic, remind the assistant to use the integrate-seatlayer skill, load the focused live Markdown contract from docs.seatlayer.io, preserve the browser-holds/server-books boundary, and rerun the doctor after implementation. Otherwise add no commentary. End with the single word 'approve' on its own line."
+          }
+        ]
+      }
+    ]
+  }
+}

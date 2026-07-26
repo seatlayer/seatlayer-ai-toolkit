@@ -1,0 +1,23 @@
+{
+  "name": "seatlayer-ai-toolkit",
+  "version": "0.1.0",
+  "description": "Agent skills and diagnostics for safe SeatLayer integrations.",
+  "type": "module",
+  "private": true,
+  "bin": {
+    "seatlayer-ai": "./scripts/cli.mjs"
+  },
+  "scripts": {
+    "doctor": "node scripts/doctor.mjs",
+    "test": "node --test tests/*.test.mjs",
+    "validate": "node scripts/validate-toolkit.mjs && npm test"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/paiteq/seatlayer-ai-toolkit.git"
+  },
+  "license": "MIT"
+}

@@ -1,0 +1,45 @@
+{
+  "name": "seatlayer-ai-toolkit",
+  "owner": {
+    "name": "SeatLayer",
+    "url": "https://seatlayer.io"
+  },
+  "metadata": {
+    "description": "Agent skills, diagnostics, and Designer MCP configuration for SeatLayer integrations.",
+    "version": "0.1.0"
+  },
+  "plugins": [
+    {
+      "name": "seatlayer",
+      "description": "Build, diagnose, and verify SeatLayer integrations inside an existing application.",
+      "source": "./",
+      "version": "0.1.0",
+      "author": {
+        "name": "SeatLayer"
+      },
+      "license": "MIT",
+      "keywords": [
+        "seatlayer",
+        "reserved-seating",
+        "checkout",
+        "mcp"
+      ],
+      "strict": true,
+      "commands": [
+        "./commands/doctor.md",
+        "./commands/integrate.md",
+        "./commands/setup.md",
+        "./commands/verify.md"
+      ],
+      "skills": [
+        "./skills/integrate-seatlayer"
+      ],
+      "mcpServers": [
+        "./.mcp.json"
+      ],
+      "hooks": [
+        "./hooks/hooks.json"
+      ]
+    }
+  ]
+}
