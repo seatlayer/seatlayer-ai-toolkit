@@ -203,14 +203,18 @@ export async function scanRepository(target = ".") {
     }
 
     const literalSecret = firstMatch(content, /\bsk_(?:test|live)_[A-Za-z0-9_-]{12,}\b/g);
+    const secretContext = literalSecret
+      ? content.slice(
+          Math.max(0, literalSecret.index - 300),
+          literalSecret.index + literalSecret[0].length + 300,
+        )
+      : "";
     const secretLooksSeatLayerSpecific =
-      /seatlayer/i.test(content) ||
-      /SEATLAYER_SECRET_KEY/.test(content) ||
-      /api\.seatlayer\.io/.test(content) ||
+      /SEATLAYER_SECRET_KEY|api\.seatlayer\.io|@seatlayer\//i.test(secretContext) ||
       /seatlayer/i.test(relativePath);
     const explicitFakeSecret =
       literalSecret &&
-      /(?:dummy|example|fake|not[_-]?a[_-]?real|placeholder)/i.test(
+      /(?:dummy|example|fake|not[_-]?a[_-]?real|placeholder|never[_-]?(?:render|sent))/i.test(
         literalSecret[0],
       );
     if (
@@ -232,9 +236,60 @@ export async function scanRepository(target = ".") {
     if (!isCode || !mentionsSeatLayer) continue;
 
     const likelyClient = isLikelyClientFile(relativePath, content);
+    const serverSdkImport = firstMatch(
+      content,
+      /(?:from\s*["']@seatlayer\/server["']|require\s*\(\s*["']@seatlayer\/server["']\s*\))/g,
+    );
+    if (likelyClient && serverSdkImport) {
+      addFinding(findings, {
+        code: "SL004",
+        severity: "critical",
+        path: relativePath,
+        line: lineForIndex(content, serverSdkImport.index),
+        message: "Client-facing code imports the server-only SeatLayer SDK.",
+        remediation:
+          "Move @seatlayer/server and every secret-key operation behind the trusted server boundary.",
+      });
+    }
+
+    const buyerCapabilityStorage = isTestFile(relativePath)
+      ? null
+      : firstMatch(
+          content,
+          /(?:(?:localStorage|sessionStorage|AsyncStorage)\s*\.\s*(?:setItem|set)\s*\([^\n)]{0,240}\b(?:buyerAccessToken|buyer_access_token|hostedAccessUrl|hosted_access_url)\b|(?:SharedPreferences|UserDefaults|searchParams)\b[^\n;]{0,240}\b(?:putString|set|append)\s*\([^\n)]{0,240}\b(?:buyerAccessToken|buyer_access_token|hostedAccessUrl|hosted_access_url)\b|(?:location\.(?:search|href)|(?:redirect|return|target)?url)\s*=\s*[^\n;]{0,240}\b(?:buyerAccessToken|buyer_access_token|hostedAccessUrl|hosted_access_url)\b)/gi,
+        );
+    if (buyerCapabilityStorage) {
+      addFinding(findings, {
+        code: "SL005",
+        severity: "critical",
+        path: relativePath,
+        line: lineForIndex(content, buyerCapabilityStorage.index),
+        message: "A buyer access capability may be persisted or placed in a URL.",
+        remediation:
+          "Keep buyer access tokens in memory and refresh through the trusted backend; never store them or put them in URLs.",
+      });
+    }
+
+    const buyerCapabilityLog = isTestFile(relativePath)
+      ? null
+      : firstMatch(
+          content,
+          /(?:console\.(?:log|info|debug|warn|error)|logger\.(?:log|info|debug|warn|error))\s*\([^)]*(?:buyerAccessToken|buyer_access_token|hostedAccessUrl|hosted_access_url|bse_)/gi,
+        );
+    if (buyerCapabilityLog) {
+      addFinding(findings, {
+        code: "SL104",
+        severity: "warning",
+        path: relativePath,
+        line: lineForIndex(content, buyerCapabilityLog.index),
+        message: "Logging code may expose a buyer access capability.",
+        remediation:
+          "Log the session id and expiry only; never log buyer tokens or hosted access URLs.",
+      });
+    }
     const secretReference = firstMatch(
       content,
-      /\bSEATLAYER_SECRET_KEY\b/g,
+      /(?:process\.env\.|import\.meta\.env\.|env\s*\[\s*["']|getenv\(\s*["']|System\.getenv\(\s*["']|Environment\.GetEnvironmentVariable\(\s*["']|os\.environ\[\s*["']|ENV\.fetch\(\s*["'])SEATLAYER_SECRET_KEY\b/g,
     );
     if (likelyClient && secretReference) {
       addFinding(findings, {
@@ -304,6 +359,22 @@ export async function scanRepository(target = ".") {
         message: "Logging code may include a credential or authorization value.",
         remediation:
           "Log request identifiers and status only; never log secret keys or authorization headers.",
+      });
+    }
+
+    const channelOverride = firstMatch(
+      content,
+      /ignoreChannelRestrictions\s*[:=]\s*true/g,
+    );
+    if (channelOverride && !/\breason\s*[:=]/.test(content)) {
+      addFinding(findings, {
+        code: "SL105",
+        severity: "warning",
+        path: relativePath,
+        line: lineForIndex(content, channelOverride.index),
+        message: "A privileged channel restriction override has no visible audit reason.",
+        remediation:
+          "Use the override only for a genuine back-office action and send a short, non-sensitive reason.",
       });
     }
 

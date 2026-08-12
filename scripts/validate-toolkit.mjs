@@ -77,7 +77,12 @@ for (const requiredRoute of [
   "/agents/integrate-seatlayer/index.md",
   "/examples/complete-checkout/index.md",
   "/integrations/best-practices/index.md",
+  "/integrations/iframe/index.md",
+  "/integrations/private-and-partner-sales/index.md",
+  "/server-api/buyer-access-sessions/index.md",
   "/server-api/booking/index.md",
+  "/server-sdk/install/index.md",
+  "/start/choose-an-integration/index.md",
 ]) {
   assert(
     integrationMap.includes(`https://docs.seatlayer.io${requiredRoute}`) ||

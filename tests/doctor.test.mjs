@@ -75,6 +75,23 @@ test("flags secrets and booking calls in client code", async () => {
   assert(codes.has("SL003"));
 });
 
+test("does not treat UI guidance or another provider's test key as a SeatLayer secret", async () => {
+  const root = await fixture({
+    "src/pages/DeveloperHelp.tsx": `
+      export function DeveloperHelp() {
+        return <code>Keep SEATLAYER_SECRET_KEY on your server.</code>;
+      }
+    `,
+    "server/payments/stripe.ts": `
+      export const verifier = stripeClient("sk_test_verification_only_never_sent");
+    `,
+  });
+
+  const report = await scanRepository(root);
+
+  assert.equal(report.summary.critical, 0);
+});
+
 test("warns when a SeatLayer webhook has no visible signature verification", async () => {
   const root = await fixture({
     ".env.example": "SEATLAYER_SECRET_KEY=\n",
@@ -114,4 +131,59 @@ test("flags missing idempotency and conflict handling on a server booking call",
   assert.equal(report.summary.warning, 2);
   assert(codes.has("SL101"));
   assert(codes.has("SL102"));
+});
+
+test("flags the server SDK when imported by client-facing code", async () => {
+  const root = await fixture({
+    "src/components/Checkout.tsx": `
+      "use client";
+      import { SeatLayer } from "@seatlayer/server";
+      export const client = new SeatLayer("not-a-real-key");
+    `,
+  });
+
+  const report = await scanRepository(root);
+
+  assert.equal(report.summary.critical, 1);
+  assert.equal(report.findings[0].code, "SL004");
+});
+
+test("flags persisted and logged buyer access capabilities", async () => {
+  const root = await fixture({
+    "src/components/PrivatePicker.tsx": `
+      "use client";
+      import { SeatingChart } from "@seatlayer/js";
+      const buyerAccessToken = await getSeatLayerAccess();
+      localStorage.setItem("buyerAccessToken", buyerAccessToken);
+      console.info("SeatLayer access", buyerAccessToken);
+      export const chart = new SeatingChart({ buyerAccessToken });
+    `,
+  });
+
+  const report = await scanRepository(root);
+  const codes = new Set(report.findings.map((finding) => finding.code));
+
+  assert.equal(report.summary.critical, 1);
+  assert.equal(report.summary.warning, 1);
+  assert(codes.has("SL005"));
+  assert(codes.has("SL104"));
+});
+
+test("requires an audit reason for a privileged channel override", async () => {
+  const root = await fixture({
+    "server/api/box-office.ts": `
+      export async function seatLayerOverride() {
+        return book({
+          ignoreChannelRestrictions: true,
+          labels: ["A-1"],
+        });
+      }
+    `,
+  });
+
+  const report = await scanRepository(root);
+
+  assert.equal(report.summary.critical, 0);
+  assert.equal(report.summary.warning, 1);
+  assert.equal(report.findings[0].code, "SL105");
 });

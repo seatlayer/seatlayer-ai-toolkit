@@ -14,6 +14,21 @@ listed live Markdown pages plus any exact reference page discovered through
 | Authentication and environments | `https://docs.seatlayer.io/start/authentication/index.md` |
 | Production launch | `https://docs.seatlayer.io/start/going-live/index.md` |
 
+## Commerce and distribution
+
+| Host outcome | Product/surface | Live documentation |
+|---|---|---|
+| SeatLayer owns checkout, Orders, tickets, refunds, and Door | Managed ticketing | `https://docs.seatlayer.io/start/first-event/index.md` |
+| Share one complete buyer destination | Hosted Event Page | `https://docs.seatlayer.io/start/choose-an-integration/index.md` |
+| Put managed checkout in an existing site | Managed embed | `https://docs.seatlayer.io/integrations/iframe/index.md` |
+| Publish an organizer site | Organizer Website | `https://docs.seatlayer.io/start/choose-an-integration/index.md` |
+| Host owns commerce and fulfilment | Platform/SDK | `https://docs.seatlayer.io/integrations/platforms/index.md` |
+| Private, partner, sponsor, or presale inventory | Sales channel | `https://docs.seatlayer.io/integrations/private-and-partner-sales/index.md` |
+
+For managed ticketing, do not add a host booking endpoint. For Platform/SDK,
+the host owns checkout and books from its backend. Publishing a hosted page,
+listing an event on a Website, and opening sales are separate explicit actions.
+
 ## Buyer integration
 
 | Host need | Surface | Live documentation |
@@ -29,6 +44,15 @@ listed live Markdown pages plus any exact reference page discovered through
 | 3D buyer view | Buyer SDK | `https://docs.seatlayer.io/buyer-sdk/3d-view/index.md` |
 | Journey analytics | Buyer SDK callbacks | `https://docs.seatlayer.io/buyer-sdk/analytics/index.md` |
 
+## Mobile SDK selection
+
+| Host need | Package | Live documentation |
+|---|---|---|
+| Expo or React Native | `@seatlayer/react-native` | `https://docs.seatlayer.io/buyer-sdk/mobile/index.md` |
+| Flutter | `seatlayer` | `https://docs.seatlayer.io/buyer-sdk/mobile/index.md` |
+| Native iOS | Swift package | `https://docs.seatlayer.io/buyer-sdk/mobile/index.md` |
+| Native Android | Kotlin/JitPack package | `https://docs.seatlayer.io/buyer-sdk/mobile/index.md` |
+
 ## Server and checkout
 
 | Need | Live documentation |
@@ -41,6 +65,28 @@ listed live Markdown pages plus any exact reference page discovered through
 | Blocking and release | `https://docs.seatlayer.io/server-api/blocking/index.md` |
 | Cancellations and box office | `https://docs.seatlayer.io/server-api/cancellations-and-box-office/index.md` |
 | Reports and audit history | `https://docs.seatlayer.io/server-api/reports/index.md` |
+
+Prefer the official server SDK for the host language, then use raw HTTP only
+for an operation the current SDK does not expose.
+
+| Need | Live documentation |
+|---|---|
+| Node, Python, PHP, Java, Go, Ruby, or .NET package | `https://docs.seatlayer.io/server-sdk/install/index.md` |
+| Retries, idempotency, pagination, and typed errors | `https://docs.seatlayer.io/server-sdk/reliability/index.md` |
+| SDK webhook verification | `https://docs.seatlayer.io/server-sdk/webhooks/index.md` |
+
+## Private and channel access
+
+| Need | Live documentation |
+|---|---|
+| Choose an allocation and sale route | `https://docs.seatlayer.io/platform/sales-channels/index.md` |
+| End-to-end private or partner sale | `https://docs.seatlayer.io/integrations/private-and-partner-sales/index.md` |
+| Mint, refresh, list, or revoke browser access | `https://docs.seatlayer.io/server-api/buyer-access-sessions/index.md` |
+| Allocate, preview, or create hosted access links | `https://docs.seatlayer.io/server-api/channels/index.md` |
+
+Use a hosted access link for a shareable capability URL. Use a buyer access
+session when the host backend authenticates and authorizes each buyer. Never
+accept channel scope from browser input; scope comes from the credential.
 
 ## Platforms and embedded operations
 

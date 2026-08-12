@@ -17,7 +17,9 @@ Identify:
 - existing order/payment flow;
 - environment validation and secret store;
 - test conventions; and
-- the smallest SeatLayer surface matching `$ARGUMENTS`.
+- the commerce owner and smallest SeatLayer surface matching `$ARGUMENTS`;
+- whether hosted checkout removes the need for a host booking endpoint; and
+- whether private/channel access requires a hosted link or buyer session.
 
 Load the current installation, authentication, and selected-surface Markdown
 pages from `https://docs.seatlayer.io`.

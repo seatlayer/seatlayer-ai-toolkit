@@ -1,6 +1,6 @@
 ---
 name: integrate-seatlayer
-description: Add, review, diagnose, or verify SeatLayer reserved-seating integrations inside existing applications. Use for Buyer SDK installation, SeatPicker or SeatingChart implementation, server booking, holds, ticket tiers, best-available seats, GA, workspaces, embedded Designer or control room, webhooks, analytics, checkout recovery, go-live review, or SeatLayer-related code generation and troubleshooting.
+description: Add, review, diagnose, or verify SeatLayer integrations inside existing applications. Use for managed hosted booking, direct links, embeds, Organizer Websites, Buyer SDK installation, SeatPicker or SeatingChart, mobile SDKs, server SDKs, custom checkout, holds, private or partner sales, buyer access sessions, channels, workspaces, Embedded Designer or control room, webhooks, analytics, checkout recovery, go-live review, and SeatLayer-related code generation or troubleshooting.
 ---
 
 # Integrate SeatLayer
@@ -15,15 +15,17 @@ unless the user explicitly asks for one.
 2. Inspect the package manager, framework, routing, server/client boundary,
    authentication, tenant model, order/payment flow, environment validation,
    HTTP conventions, tests, analytics adapter, and deployment platform.
-3. Run the read-only doctor when Node.js is available:
+3. Determine whether SeatLayer managed ticketing or the host platform owns
+   payment, commercial orders, tickets, refunds, and fulfilment.
+4. Run the read-only doctor when Node.js is available:
 
    ```bash
    node <skill-root>/scripts/doctor.mjs <repository-root>
    ```
 
-4. State the chosen SeatLayer surface and the discovered host locations before
+5. State the chosen commerce profile, SeatLayer surface, and discovered host locations before
    editing.
-5. Ask only for business decisions that cannot be discovered safely.
+6. Ask only for business decisions that cannot be discovered safely.
 
 Read [references/integration-map.md](references/integration-map.md) to select
 the surface and documentation routes. Read
@@ -47,11 +49,23 @@ documentation and report the discrepancy.
 
 ## Choose the smallest complete integration
 
-Use:
+Choose the commerce profile first:
 
-- `SeatPicker` for a complete buyer journey with checkout handoff.
-- `SeatingChart` for headless selection and a fully custom cart.
-- Hosted iframe only for the documented direct-booking boundary.
+- Managed ticketing when SeatLayer owns hosted checkout, Orders, tickets,
+  delivery, refunds, and Door. Use a Hosted Event Page, managed embed, or
+  Organizer Website. Do not add a host booking endpoint.
+- Platform/custom commerce when the host owns payment, orders, tickets,
+  refunds, and fulfilment. Use `SeatPicker` for checkout handoff or
+  `SeatingChart` for headless selection, then book from a trusted server.
+- Private or partner distribution when access is limited by allocation. Choose
+  a hosted access link or an origin-bound buyer access session based on the live
+  channel contract; private means no public link, not disabled inventory.
+
+Then add only the required surface:
+
+- Official mobile SDK for React Native, Flutter, iOS, or Android buyer apps.
+- Official server SDK for the host backend language; prefer it over handwritten
+  HTTP when it supports the required operation.
 - Embedded Designer for organizer chart editing.
 - `SeatManager` for an embedded operator board.
 - Workspaces and server APIs for multi-tenant platforms.
@@ -61,31 +75,49 @@ Do not choose a larger surface because it is easier to demonstrate.
 
 ## Preserve the trust boundary
 
-Implement these invariants:
+Implement the invariants for the selected profile:
 
 1. A chart is reusable geometry; each event has independent live inventory.
-2. The browser selects and holds. A trusted server inspects and books.
-3. `SEATLAYER_SECRET_KEY` is server-only.
-4. Browser prices are never trusted payment input.
-5. Use a stable host order id as `bookingRef` and reuse it for retries.
-6. Treat expired holds and HTTP `409` inventory conflicts as normal recovery
+2. Managed hosted checkout completes booking itself; never book the same buyer
+   journey again from host code.
+3. In platform/custom commerce, the browser selects and holds while a trusted
+   server inspects and books.
+4. `SEATLAYER_SECRET_KEY` and every server SDK are server-only.
+5. Browser prices are never trusted payment input in custom commerce.
+6. Use a stable host order id as `bookingRef` and reuse it for retries.
+7. Treat expired holds and HTTP `409` inventory conflicts as normal recovery
    paths.
-7. Define the payment-success/booking-failure recovery policy explicitly.
-8. Verify webhook signatures from the raw body and deduplicate occurrences.
+8. Define the payment-success/booking-failure recovery policy explicitly.
+9. Keep buyer access tokens in memory and bind them to the exact event and
+   origin; never log, persist, or place them in URLs.
+10. Require a short audit reason for privileged channel overrides.
+11. Verify webhook signatures from the raw body and deduplicate occurrences.
 
 Do not log or return secret keys, raw credentials, full authorization headers,
 or webhook secrets.
 
 ## Implement in repository order
 
-1. Add environment validation and server-only configuration.
-2. Add the server SeatLayer client/helper using the repository's HTTP pattern.
-3. Add hold inspection, trusted pricing, order coordination, and idempotent
+For managed hosted checkout:
+
+1. Confirm managed-event readiness, gateway mode, and the chosen distribution
+   surface.
+2. Add the link, managed embed, or Website placement within the existing UI.
+3. Verify hosted payment, branded return, Orders, ticket delivery, loading,
+   mobile, and accessibility behavior in test mode.
+
+For platform/custom commerce:
+
+1. Add environment validation and the official server SDK server-side.
+2. Add hold inspection, trusted pricing, order coordination, and idempotent
    booking.
-4. Add the buyer surface within the existing UI and design system.
-5. Add expired-hold, conflict, loading, empty, mobile, and keyboard behavior.
-6. Add webhooks, analytics, or operator surfaces only when required by scope.
-7. Document production values without printing secrets.
+3. Add the buyer SDK surface within the existing UI and design system.
+4. Add expired-hold, conflict, loading, empty, mobile, and keyboard behavior.
+
+For private or partner access, additionally add entitlement, channel scope,
+short-lived token refresh or hosted-link lifecycle, exact-origin enforcement,
+revocation, and attribution. Add webhooks, analytics, or operator surfaces only
+when required by scope. Document production variable names without values.
 
 Keep browser-to-server payloads small and typed. The opaque `holdId` and stable
 host order identity should cross the boundary; trusted pricing and booking
@@ -97,17 +129,15 @@ Read [references/verification.md](references/verification.md), then run the
 repository's typecheck, unit tests, lint, production build, and relevant
 integration tests.
 
-At minimum prove:
+Prove only the behavior belonging to the selected profile. For managed hosted
+checkout, verify the hosted purchase and return journey without adding a host
+booking assertion. For custom commerce, verify select → hold → inspect →
+pay/order → book, expiry, conflicts, idempotent retry, and compensation. For
+private access, also verify wrong-origin, expired, revoked, and exhausted access
+without silently widening to public inventory.
 
-- successful select → hold → inspect → pay/order → book;
-- expired hold before payment;
-- inventory conflict;
-- duplicate retry with the same `bookingRef`;
-- payment failure;
-- payment success followed by booking failure;
-- missing or mismatched environment credentials;
-- no secret in browser output; and
-- mobile and keyboard operability.
+Always prove no secret or server SDK enters a buyer bundle, buyer access tokens
+are not persisted or logged, and mobile and keyboard behavior remains operable.
 
 Run the doctor again after implementation. Distinguish automated checks from
 manual verification and report skipped checks.

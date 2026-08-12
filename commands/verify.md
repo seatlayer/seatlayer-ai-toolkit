@@ -12,10 +12,13 @@ Use the `integrate-seatlayer` skill and read its verification reference.
 2. Run the repository's typecheck, unit tests, lint, production build, and
    existing integration/browser tests.
 3. Inspect the browser build for server credentials and server-only modules.
-4. Trace select → hold → server inspect → trusted order/payment → book.
-5. Verify expiry, conflict, duplicate retry, payment failure, payment-success
-   booking failure, missing credentials, test/live mismatch, webhook replay,
-   mobile, and keyboard behavior.
+4. Identify the selected commerce profile. For managed checkout, trace hosted
+   select → payment → Order → ticket → branded return. For custom commerce,
+   trace select → hold → server inspect → trusted order/payment → book.
+5. Verify only the relevant matrix, including hosted direct/embed/Website
+   routing or private wrong-origin/expired/revoked access where applicable.
+6. Inspect storage, URLs, logs, analytics, and buyer bundles for secrets, server
+   SDKs, buyer access tokens, and hosted capability URLs.
 
 Use test mode for live probes. Do not create production bookings, cancel live
 orders, publish charts, or reveal credentials.

@@ -1,7 +1,7 @@
 {
   "name": "seatlayer-ai-toolkit",
-  "version": "0.1.0",
-  "description": "Repository-first skills and diagnostics for safe SeatLayer integrations.",
+  "version": "0.2.0",
+  "description": "Repository-first skills and diagnostics for hosted, SDK, private-access, and server-side SeatLayer integrations.",
   "author": {
     "name": "SeatLayer",
     "url": "https://seatlayer.io"
@@ -19,14 +19,16 @@
   "skills": "./skills/",
   "interface": {
     "displayName": "SeatLayer AI Toolkit",
-    "shortDescription": "Build and verify reserved-seating integrations.",
-    "longDescription": "Adds repository-first SeatLayer integration guidance, deterministic safety diagnostics, and the optional Designer MCP connection.",
+    "shortDescription": "Build and verify every SeatLayer integration path.",
+    "longDescription": "Chooses the correct hosted, buyer SDK, private-access, server SDK, or operator surface; adds deterministic safety diagnostics and the optional Designer MCP connection.",
     "developerName": "SeatLayer",
     "category": "Productivity",
     "capabilities": [],
     "websiteURL": "https://docs.seatlayer.io/agents/overview/",
     "defaultPrompt": [
       "Integrate SeatLayer into this repository.",
+      "Choose between SeatLayer hosted checkout and a custom checkout.",
+      "Build a private or partner SeatLayer sale safely.",
       "Audit this SeatLayer integration before launch.",
       "Verify the SeatLayer hold-to-book flow."
     ],

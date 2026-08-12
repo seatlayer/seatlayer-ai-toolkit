@@ -24,6 +24,8 @@ Report:
 - critical issues, warnings, and confirmed passes;
 - exact file and line evidence;
 - the violated SeatLayer trust boundary;
+- the selected or inferred commerce profile and whether the architecture mixes
+  hosted and custom booking responsibilities;
 - a focused remediation;
 - automated versus manual verification; and
 - whether the integration is ready for test mode or production.

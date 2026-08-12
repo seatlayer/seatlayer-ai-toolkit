@@ -1,7 +1,7 @@
 {
   "name": "seatlayer",
-  "version": "0.1.0",
-  "description": "Repository-first skills and diagnostics for safe SeatLayer integrations.",
+  "version": "0.2.0",
+  "description": "Repository-first skills and diagnostics for hosted, SDK, private-access, and server-side SeatLayer integrations.",
   "author": {
     "name": "SeatLayer",
     "url": "https://seatlayer.io"

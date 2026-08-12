@@ -3,8 +3,9 @@
 [![Validate](https://github.com/seatlayer/seatlayer-ai-toolkit/actions/workflows/ci.yml/badge.svg)](https://github.com/seatlayer/seatlayer-ai-toolkit/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/license-MIT-111827.svg)](LICENSE)
 
-Agent skills, diagnostics, and optional Designer MCP configuration for adding
-reserved seating to an existing application.
+Agent skills, diagnostics, and optional Designer MCP configuration for choosing,
+building, and verifying SeatLayer hosted checkout, buyer SDK, private-access,
+server SDK, mobile, platform, and operator integrations.
 
 The toolkit does not replace the
 [SeatLayer developer documentation](https://docs.seatlayer.io/). It teaches an
@@ -17,31 +18,63 @@ the result.
 [Demo hub](https://app.seatlayer.io/demo) ·
 [Website](https://seatlayer.io/developers/)
 
-## SeatLayer ecosystem
+## Choose the integration before the package
 
-- [Developer documentation](https://docs.seatlayer.io/) — authoritative product
-  contracts, guides, API references, and agent-readable Markdown.
-- [SeatLayer SDK](https://github.com/seatlayer/seatlayer-sdk) — official
-  JavaScript and React package source.
-- [SeatLayer React Native SDK](https://github.com/seatlayer/seatlayer-react-native)
-  — typed Expo, iOS, and Android package with a runnable example.
-- [SeatLayer iOS SDK](https://github.com/seatlayer/seatlayer-ios) — public native
-  SDK source and Swift Package Manager preview.
-- [SeatLayer Android SDK](https://github.com/seatlayer/seatlayer-android) —
-  native Kotlin view, coroutine controller, and secure AndroidX WebKit bridge.
-- [SeatLayer for Flutter](https://pub.dev/packages/seatlayer) — official Flutter
-  package, with source at
-  [seatlayer/seatlayer-flutter](https://github.com/seatlayer/seatlayer-flutter).
-- [SeatLayer on GitHub](https://github.com/seatlayer) — all public SeatLayer
-  repositories.
+| Outcome | Start here | Commerce owner |
+|---|---|---|
+| Share a complete booking page | Hosted Event Page | SeatLayer managed ticketing |
+| Put managed checkout in an existing site | Managed embed | SeatLayer managed ticketing |
+| Publish one or many events as a site | Organizer Website | SeatLayer managed ticketing |
+| Add seating to an existing checkout | `SeatPicker` or `SeatingChart` | Your platform |
+| Sell a private, partner, sponsor, or presale allocation | Hosted access link or buyer access session | Depends on the selected product profile |
+| Build a mobile buyer experience | React Native, Flutter, iOS, or Android SDK | Your platform |
+| Add organizer chart or event operations | Embedded Designer or control room | Your platform |
+
+Read [Choose an integration](https://docs.seatlayer.io/start/choose-an-integration/)
+before implementing. A managed hosted surface does not require a host booking
+endpoint. A platform/custom checkout does.
+
+## SeatLayer package ecosystem
+
+The [developer documentation](https://docs.seatlayer.io/) is the authoritative
+contract. Registry pages are the authority for the latest published version.
+
+### Buyer and mobile SDKs
+
+| Surface | Package or source | Documentation |
+|---|---|---|
+| JavaScript | [`@seatlayer/js`](https://www.npmjs.com/package/@seatlayer/js) | [Install](https://docs.seatlayer.io/buyer-sdk/install/) |
+| React | [`@seatlayer/react`](https://www.npmjs.com/package/@seatlayer/react) | [Install](https://docs.seatlayer.io/buyer-sdk/install/) |
+| React Native | [`@seatlayer/react-native`](https://www.npmjs.com/package/@seatlayer/react-native) | [Mobile](https://docs.seatlayer.io/buyer-sdk/mobile/) |
+| Flutter | [`seatlayer`](https://pub.dev/packages/seatlayer) | [Mobile](https://docs.seatlayer.io/buyer-sdk/mobile/) |
+| iOS | [Swift package](https://github.com/seatlayer/seatlayer-ios) | [Mobile](https://docs.seatlayer.io/buyer-sdk/mobile/) |
+| Android | [Kotlin/JitPack package](https://github.com/seatlayer/seatlayer-android) | [Mobile](https://docs.seatlayer.io/buyer-sdk/mobile/) |
+
+### Server SDKs
+
+Server SDKs are secret-key packages. Never bundle them into buyer-facing code.
+
+| Language | Package | Source |
+|---|---|---|
+| Node.js | [`@seatlayer/server`](https://www.npmjs.com/package/@seatlayer/server) | [seatlayer-node](https://github.com/seatlayer/seatlayer-node) |
+| Python | [`seatlayer`](https://pypi.org/project/seatlayer/) | [seatlayer-python](https://github.com/seatlayer/seatlayer-python) |
+| PHP | [`seatlayer/seatlayer-php`](https://packagist.org/packages/seatlayer/seatlayer-php) | [seatlayer-php](https://github.com/seatlayer/seatlayer-php) |
+| Java | [`io.seatlayer:seatlayer-java`](https://central.sonatype.com/artifact/io.seatlayer/seatlayer-java) | [seatlayer-java](https://github.com/seatlayer/seatlayer-java) |
+| Go | [`github.com/seatlayer/seatlayer-go`](https://pkg.go.dev/github.com/seatlayer/seatlayer-go) | [seatlayer-go](https://github.com/seatlayer/seatlayer-go) |
+| Ruby | [`seatlayer`](https://rubygems.org/gems/seatlayer) | [seatlayer-ruby](https://github.com/seatlayer/seatlayer-ruby) |
+| .NET | [`SeatLayer`](https://www.nuget.org/packages/SeatLayer) | [seatlayer-dotnet](https://github.com/seatlayer/seatlayer-dotnet) |
+
+[Server SDK installation](https://docs.seatlayer.io/server-sdk/install/) ·
+[SeatLayer on GitHub](https://github.com/seatlayer)
 
 ## What is included
 
 - `integrate-seatlayer` — a portable Agent Skill for implementation, review,
   troubleshooting, and go-live work.
 - `seatlayer-ai doctor` — deterministic checks for exposed credentials,
-  browser-side booking, missing idempotency and conflict handling, and weak
-  webhook verification.
+  server packages in client code, browser-side booking, unsafe buyer-access
+  token handling, missing idempotency and conflict handling, unaudited channel
+  overrides, and weak webhook verification.
 - Claude Code commands for setup, integration, diagnosis, and verification.
 - Codex and Claude plugin manifests.
 - Optional remote Designer MCP configuration. OAuth remains chart-scoped and
@@ -126,13 +159,22 @@ node scripts/doctor.mjs /path/to/project --json
 The scanner never reads files outside the target repository, never prints
 environment-variable values, and ignores dependencies and build output.
 
-## Core safety boundary
+## Core safety boundaries
 
-- The browser selects and holds; a trusted server inspects and books.
+- Choose managed ticketing or platform/custom commerce before choosing an SDK.
+- Managed hosted checkout owns payment, Orders, tickets, and booking; do not add
+  a duplicate host booking endpoint.
+- In platform/custom commerce, the browser selects and holds while a trusted
+  server inspects and books.
 - `SEATLAYER_SECRET_KEY` never enters browser code.
 - Payment amounts come from trusted server data, not browser input.
 - `bookingRef` is the host order identifier and is reused for safe retries.
 - Inventory conflicts and expired holds are normal recovery paths.
+- Buyer access tokens are event- and origin-bound capabilities. Keep them in
+  memory, never in storage, URLs, logs, analytics, or exception text.
+- A private event is token-gated and has **no public link**; it is not hard-off.
+- Listing an event on an Organizer Website makes it discoverable on that public
+  Website and must be an explicit organizer decision.
 - Webhook signatures are verified from the raw request body.
 
 The live documentation is authoritative when it conflicts with toolkit
@@ -141,6 +183,8 @@ guidance:
 - [Build with agents](https://docs.seatlayer.io/agents/overview/)
 - [Agent integration workflow](https://docs.seatlayer.io/agents/integrate-seatlayer/)
 - [Complete checkout](https://docs.seatlayer.io/examples/complete-checkout/)
+- [Private and partner sales](https://docs.seatlayer.io/integrations/private-and-partner-sales/)
+- [Server SDK installation](https://docs.seatlayer.io/server-sdk/install/)
 - [Integration best practices](https://docs.seatlayer.io/integrations/best-practices/)
 
 ## Designer MCP
@@ -160,9 +204,12 @@ and plugin validators.
 
 ```bash
 npm run validate
+npm run check:docs
 ```
 
-The repository intentionally has no runtime dependencies.
+The first command validates manifests, the portable skill, installer behavior,
+and deterministic diagnostics. The second resolves every referenced SeatLayer
+documentation URL. The repository intentionally has no runtime dependencies.
 
 ## License
 

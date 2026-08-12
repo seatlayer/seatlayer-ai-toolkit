@@ -1,7 +1,7 @@
 {
   "name": "seatlayer-ai-toolkit",
-  "version": "0.1.0",
-  "description": "Agent skills and diagnostics for safe SeatLayer integrations.",
+  "version": "0.2.0",
+  "description": "Agent skills and diagnostics for hosted, SDK, private-access, and server-side SeatLayer integrations.",
   "type": "module",
   "private": true,
   "bin": {
@@ -9,6 +9,7 @@
   },
   "scripts": {
     "doctor": "node scripts/doctor.mjs",
+    "check:docs": "node scripts/check-doc-links.mjs",
     "test": "node --test tests/*.test.mjs",
     "validate": "node scripts/validate-toolkit.mjs && npm test"
   },
