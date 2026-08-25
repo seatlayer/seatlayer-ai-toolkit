@@ -1,11 +1,12 @@
-# SeatLayer AI Toolkit
+# SeatLayer AI Toolkit for Coding Agents
 
 [![Validate](https://github.com/seatlayer/seatlayer-ai-toolkit/actions/workflows/ci.yml/badge.svg)](https://github.com/seatlayer/seatlayer-ai-toolkit/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/license-MIT-111827.svg)](LICENSE)
 
-Agent skills, diagnostics, and optional Designer MCP configuration for choosing,
-building, and verifying SeatLayer hosted checkout, buyer SDK, private-access,
-server SDK, mobile, platform, and operator integrations.
+Agent skills, deterministic diagnostics, and optional Designer MCP
+configuration for choosing, building, and verifying SeatLayer reserved-seating
+integrations — hosted checkout, buyer SDK, private access, server SDK, mobile,
+platform, and operator surfaces.
 
 The toolkit does not replace the
 [SeatLayer developer documentation](https://docs.seatlayer.io/). It teaches an
@@ -13,10 +14,12 @@ agent how to inspect a repository, select the right SeatLayer surface, load the
 smallest relevant live documentation set, implement the integration, and prove
 the result.
 
-[Build with agents](https://docs.seatlayer.io/agents/overview/) ·
-[Developer docs](https://docs.seatlayer.io/) ·
-[Demo hub](https://app.seatlayer.io/demo) ·
-[Website](https://seatlayer.io/developers/)
+[Build SeatLayer integrations with agents](https://docs.seatlayer.io/agents/overview/) ·
+[SeatLayer developer documentation](https://docs.seatlayer.io/) ·
+[SeatLayer reserved-seating platform](https://seatlayer.io/) ·
+[SeatLayer buyer seat-map demos](https://app.seatlayer.io/demo) ·
+[SeatLayer for developers](https://seatlayer.io/developers/) ·
+[SeatLayer on GitHub](https://github.com/seatlayer)
 
 ## Choose the integration before the package
 
@@ -180,12 +183,18 @@ environment-variable values, and ignores dependencies and build output.
 The live documentation is authoritative when it conflicts with toolkit
 guidance:
 
-- [Build with agents](https://docs.seatlayer.io/agents/overview/)
-- [Agent integration workflow](https://docs.seatlayer.io/agents/integrate-seatlayer/)
-- [Complete checkout](https://docs.seatlayer.io/examples/complete-checkout/)
-- [Private and partner sales](https://docs.seatlayer.io/integrations/private-and-partner-sales/)
-- [Server SDK installation](https://docs.seatlayer.io/server-sdk/install/)
-- [Integration best practices](https://docs.seatlayer.io/integrations/best-practices/)
+- [Build SeatLayer integrations with agents](https://docs.seatlayer.io/agents/overview/)
+  for the overview an agent should read first.
+- [Follow the agent integration workflow](https://docs.seatlayer.io/agents/integrate-seatlayer/)
+  for the step order this toolkit's skill implements.
+- [Run the complete checkout example](https://docs.seatlayer.io/examples/complete-checkout/)
+  to connect a buyer hold id to payment and idempotent booking.
+- [Sell private, partner, and presale allocations](https://docs.seatlayer.io/integrations/private-and-partner-sales/)
+  when the event is token-gated rather than public.
+- [Install a SeatLayer server SDK](https://docs.seatlayer.io/server-sdk/install/)
+  for the trusted side that inspects holds and books.
+- [Review SeatLayer integration best practices](https://docs.seatlayer.io/integrations/best-practices/)
+  before going live.
 
 ## Designer MCP
 
