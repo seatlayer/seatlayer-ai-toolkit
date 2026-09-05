@@ -3,10 +3,10 @@
 [![Validate](https://github.com/seatlayer/seatlayer-ai-toolkit/actions/workflows/ci.yml/badge.svg)](https://github.com/seatlayer/seatlayer-ai-toolkit/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/license-MIT-111827.svg)](LICENSE)
 
-Agent skills, deterministic diagnostics, and optional Designer MCP
-configuration for choosing, building, and verifying SeatLayer reserved-seating
-integrations — hosted checkout, buyer SDK, private access, server SDK, mobile,
-platform, and operator surfaces.
+Build seat map and reserved-seating integrations with a coding agent. The
+SeatLayer AI Toolkit provides reusable agent skills, integration diagnostics,
+and optional Designer MCP setup for JavaScript and framework packages, mobile
+apps, server SDKs, hosted checkout, and organizer tools.
 
 The toolkit does not replace the
 [SeatLayer developer documentation](https://docs.seatlayer.io/). It teaches an
@@ -46,29 +46,49 @@ contract. Registry pages are the authority for the latest published version.
 
 | Surface | Package or source | Documentation |
 |---|---|---|
-| JavaScript | [`@seatlayer/js`](https://www.npmjs.com/package/@seatlayer/js) | [Install](https://docs.seatlayer.io/buyer-sdk/install/) |
-| React | [`@seatlayer/react`](https://www.npmjs.com/package/@seatlayer/react) | [Install](https://docs.seatlayer.io/buyer-sdk/install/) |
-| React Native | [`@seatlayer/react-native`](https://www.npmjs.com/package/@seatlayer/react-native) | [Mobile](https://docs.seatlayer.io/buyer-sdk/mobile/) |
-| Flutter | [`seatlayer`](https://pub.dev/packages/seatlayer) | [Mobile](https://docs.seatlayer.io/buyer-sdk/mobile/) |
-| iOS | [Swift package](https://github.com/seatlayer/seatlayer-ios) | [Mobile](https://docs.seatlayer.io/buyer-sdk/mobile/) |
-| Android | [Kotlin/JitPack package](https://github.com/seatlayer/seatlayer-android) | [Mobile](https://docs.seatlayer.io/buyer-sdk/mobile/) |
+| JavaScript | [`@seatlayer/js`](https://www.npmjs.com/package/@seatlayer/js) | [JavaScript seat map SDK](https://docs.seatlayer.io/buyer-sdk/install/) |
+| React | [`@seatlayer/react`](https://www.npmjs.com/package/@seatlayer/react) | [React seating chart components](https://docs.seatlayer.io/buyer-sdk/react/) |
+| Vue | [`@seatlayer/vue`](https://www.npmjs.com/package/@seatlayer/vue) | [Vue seating chart components](https://docs.seatlayer.io/buyer-sdk/vue/) |
+| Angular | [`@seatlayer/angular`](https://www.npmjs.com/package/@seatlayer/angular) | [Angular seating chart components](https://docs.seatlayer.io/buyer-sdk/angular/) |
+| React Native | [`@seatlayer/react-native`](https://www.npmjs.com/package/@seatlayer/react-native) | [React Native seat map SDK](https://docs.seatlayer.io/buyer-sdk/react-native/) |
+| Flutter | [`seatlayer`](https://pub.dev/packages/seatlayer) | [Flutter seat picker SDK](https://docs.seatlayer.io/buyer-sdk/flutter/) |
+| iOS | [Swift package](https://github.com/seatlayer/seatlayer-ios) | [Swift and SwiftUI seat maps](https://docs.seatlayer.io/buyer-sdk/ios/) |
+| Android | [Maven Central package](https://central.sonatype.com/artifact/io.seatlayer/seatlayer-android) | [Kotlin and Compose seat maps](https://docs.seatlayer.io/buyer-sdk/android/) |
 
 ### Server SDKs
 
 Server SDKs are secret-key packages. Never bundle them into buyer-facing code.
 
-| Language | Package | Source |
-|---|---|---|
-| Node.js | [`@seatlayer/server`](https://www.npmjs.com/package/@seatlayer/server) | [seatlayer-node](https://github.com/seatlayer/seatlayer-node) |
-| Python | [`seatlayer`](https://pypi.org/project/seatlayer/) | [seatlayer-python](https://github.com/seatlayer/seatlayer-python) |
-| PHP | [`seatlayer/seatlayer-php`](https://packagist.org/packages/seatlayer/seatlayer-php) | [seatlayer-php](https://github.com/seatlayer/seatlayer-php) |
-| Java | [`io.seatlayer:seatlayer-java`](https://central.sonatype.com/artifact/io.seatlayer/seatlayer-java) | [seatlayer-java](https://github.com/seatlayer/seatlayer-java) |
-| Go | [`github.com/seatlayer/seatlayer-go`](https://pkg.go.dev/github.com/seatlayer/seatlayer-go) | [seatlayer-go](https://github.com/seatlayer/seatlayer-go) |
-| Ruby | [`seatlayer`](https://rubygems.org/gems/seatlayer) | [seatlayer-ruby](https://github.com/seatlayer/seatlayer-ruby) |
-| .NET | [`SeatLayer`](https://www.nuget.org/packages/SeatLayer) | [seatlayer-dotnet](https://github.com/seatlayer/seatlayer-dotnet) |
+| Language | Package | Source | Documentation |
+|---|---|---|---|
+| Node.js | [`@seatlayer/server`](https://www.npmjs.com/package/@seatlayer/server) | [seatlayer-node](https://github.com/seatlayer/seatlayer-node) | [Node.js seat booking SDK](https://docs.seatlayer.io/server-sdk/node/) |
+| Python | [`seatlayer`](https://pypi.org/project/seatlayer/) | [seatlayer-python](https://github.com/seatlayer/seatlayer-python) | [Python seat booking SDK](https://docs.seatlayer.io/server-sdk/python/) |
+| PHP | [`seatlayer/seatlayer-php`](https://packagist.org/packages/seatlayer/seatlayer-php) | [seatlayer-php](https://github.com/seatlayer/seatlayer-php) | [PHP seat booking SDK](https://docs.seatlayer.io/server-sdk/php/) |
+| Java | [`io.seatlayer:seatlayer-java`](https://central.sonatype.com/artifact/io.seatlayer/seatlayer-java) | [seatlayer-java](https://github.com/seatlayer/seatlayer-java) | [Java seat booking SDK](https://docs.seatlayer.io/server-sdk/java/) |
+| Go | [`github.com/seatlayer/seatlayer-go`](https://pkg.go.dev/github.com/seatlayer/seatlayer-go) | [seatlayer-go](https://github.com/seatlayer/seatlayer-go) | [Go seat booking SDK](https://docs.seatlayer.io/server-sdk/go/) |
+| Ruby | [`seatlayer`](https://rubygems.org/gems/seatlayer) | [seatlayer-ruby](https://github.com/seatlayer/seatlayer-ruby) | [Ruby seat booking SDK](https://docs.seatlayer.io/server-sdk/ruby/) |
+| .NET | [`SeatLayer`](https://www.nuget.org/packages/SeatLayer) | [seatlayer-dotnet](https://github.com/seatlayer/seatlayer-dotnet) | [.NET seat booking SDK](https://docs.seatlayer.io/server-sdk/dotnet/) |
 
 [Server SDK installation](https://docs.seatlayer.io/server-sdk/install/) ·
 [SeatLayer on GitHub](https://github.com/seatlayer)
+
+## Agent tools for integration, chart design, and seat selection
+
+Choose the interface for the task:
+
+- **Integration knowledge:** the public documentation MCP endpoint at
+  `https://docs.seatlayer.io/mcp` and [Markdown documentation index](https://docs.seatlayer.io/llms.txt)
+  help an agent find the current API and SDK guidance.
+- **Chart authoring:** [Designer MCP](https://docs.seatlayer.io/agents/designer-mcp/)
+  connects an authorized agent to a scoped chart. Use the documented approval
+  flow before publishing changes.
+- **Buyer seat selection:** [WebMCP seat-selection tools](https://docs.seatlayer.io/buyer-sdk/webmcp-agent-tools/)
+  let a compatible browser assistant describe a chart, find seats, and update
+  the selection when the buyer integration opts in. Payment remains in the
+  host checkout flow.
+
+This toolkit helps implement those integrations. The documentation MCP,
+Designer MCP, and buyer WebMCP tools are separate interfaces.
 
 ## What is included
 

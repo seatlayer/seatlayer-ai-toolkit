@@ -6,6 +6,39 @@ import { fileURLToPath } from "node:url";
 
 const root = resolve(fileURLToPath(new URL("..", import.meta.url)));
 const sourceExtensions = new Set([".json", ".md", ".mjs", ".yml", ".yaml"]);
+const documentationMcpUrl = "https://docs.seatlayer.io/mcp";
+
+function requestFor(url) {
+  const request = {
+    headers: { "user-agent": "seatlayer-ai-toolkit-link-check/0.2" },
+    signal: AbortSignal.timeout(15_000),
+  };
+
+  if (url !== documentationMcpUrl) return request;
+
+  return {
+    ...request,
+    method: "POST",
+    headers: {
+      ...request.headers,
+      accept: "application/json, text/event-stream",
+      "content-type": "application/json",
+    },
+    body: JSON.stringify({
+      jsonrpc: "2.0",
+      id: 1,
+      method: "initialize",
+      params: {
+        protocolVersion: "2025-06-18",
+        capabilities: {},
+        clientInfo: {
+          name: "seatlayer-ai-toolkit-link-check",
+          version: "0.2",
+        },
+      },
+    }),
+  };
+}
 
 async function collect(directory) {
   const files = [];
@@ -32,11 +65,25 @@ const workers = Array.from({ length: Math.min(5, queue.length) }, async () => {
   while (queue.length > 0) {
     const url = queue.shift();
     try {
-      const response = await fetch(url, {
-        headers: { "user-agent": "seatlayer-ai-toolkit-link-check/0.2" },
-        signal: AbortSignal.timeout(15_000),
-      });
-      if (!response.ok) failures.push(`${response.status} ${url}`);
+      const response = await fetch(url, requestFor(url));
+      if (!response.ok) {
+        await response.body?.cancel();
+        failures.push(`${response.status} ${url}`);
+        continue;
+      }
+
+      if (url === documentationMcpUrl) {
+        const message = await response.json();
+        if (
+          message?.jsonrpc !== "2.0" ||
+          message?.id !== 1 ||
+          typeof message?.result?.serverInfo?.name !== "string"
+        ) {
+          failures.push(`invalid MCP initialize response ${url}`);
+        }
+      } else {
+        await response.body?.cancel();
+      }
     } catch (error) {
       failures.push(`${error instanceof Error ? error.message : String(error)} ${url}`);
     }
