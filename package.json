@@ -1,7 +1,7 @@
 {
   "name": "seatlayer-ai-toolkit",
   "version": "0.2.0",
-  "description": "Agent skills and diagnostics for hosted, SDK, private-access, and server-side SeatLayer integrations.",
+  "description": "Agent skills and diagnostics for building SeatLayer seating chart and seat map integrations: hosted, SDK, private-access and server-side.",
   "type": "module",
   "private": true,
   "bin": {
