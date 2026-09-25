@@ -3,12 +3,12 @@
 [![Validate](https://github.com/seatlayer/seatlayer-ai-toolkit/actions/workflows/ci.yml/badge.svg)](https://github.com/seatlayer/seatlayer-ai-toolkit/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/license-MIT-111827.svg)](LICENSE)
 
-SeatLayer is interactive seating chart software built for stadium scale. Platforms embed the white-label seat picker with their own checkout; organizers sell seated events on their own website with their own payment gateway.
-
-Build seat map and reserved-seating integrations with a coding agent. The
-SeatLayer AI Toolkit provides reusable agent skills, integration diagnostics,
-and optional Designer MCP setup for JavaScript and framework packages, mobile
-apps, server SDKs, hosted checkout, and organizer tools.
+Agent skills, plugins and a read-only safety scanner that help Claude Code,
+Codex, GitHub Copilot and other coding agents add SeatLayer seat maps and
+reserved-seat checkout to an existing application. It covers the JavaScript and
+framework packages, the mobile SDKs, the server SDKs, Hosted Ticketing, and
+organizer tools, and it connects the SeatLayer MCP servers. SeatLayer is seating
+chart and reserved-seat ticketing software built for venues up to stadium scale.
 
 The toolkit does not replace the
 [SeatLayer developer documentation](https://docs.seatlayer.io/). It teaches an
@@ -84,12 +84,16 @@ Server SDKs are secret-key packages. Never bundle them into buyer-facing code.
 
 Choose the interface for the task:
 
-- **Integration knowledge:** the public documentation MCP endpoint at
-  `https://docs.seatlayer.io/mcp` and [Markdown documentation index](https://docs.seatlayer.io/llms.txt)
+- **Integration knowledge:** the public, anonymous documentation MCP endpoint at
+  `https://docs.seatlayer.io/mcp` (11 read-only tools, such as `search_docs`,
+  `get_page` and `sdks`) and [Markdown documentation index](https://docs.seatlayer.io/llms.txt)
   help an agent find the current API and SDK guidance.
 - **Chart authoring:** [Designer MCP](https://docs.seatlayer.io/agents/designer-mcp/)
-  connects an authorized agent to a scoped chart. Use the documented approval
-  flow before publishing changes.
+  connects an authorized agent to one chart or a workspace. It builds, traces,
+  validates, reviews and publishes charts, manages Event Configurations, and,
+  when the admin allows it, controls live sections and seat blocks. It cannot
+  hold, book or refund seats. Use the documented approval flow before
+  publishing changes.
 - **Buyer seat selection:** [WebMCP seat-selection tools](https://docs.seatlayer.io/buyer-sdk/webmcp-agent-tools/)
   let a compatible browser assistant describe a chart, find seats, and update
   the selection when the buyer integration opts in. Payment remains in the
@@ -100,16 +104,23 @@ Designer MCP, and buyer WebMCP tools are separate interfaces.
 
 ## What is included
 
-- `integrate-seatlayer` — a portable Agent Skill for implementation, review,
-  troubleshooting, and go-live work.
-- `seatlayer-ai doctor` — deterministic checks for exposed credentials,
+- `integrate-seatlayer`: a portable Agent Skill for implementation, review,
+  troubleshooting, and go-live work. Its references route an agent to the live
+  pages for event setup and ticket limits, the 14 payment gateways, 3D views,
+  resale, Seasons and Season Best Available, API errors and rate limits, the 40
+  webhook events, SeatManager hover prices, Click the plan, and migration from
+  seats.io.
+- `seatlayer-ai doctor`: deterministic checks for exposed credentials,
   server packages in client code, browser-side booking, unsafe buyer-access
   token handling, missing idempotency and conflict handling, unaudited channel
   overrides, and weak webhook verification.
 - Claude Code commands for setup, integration, diagnosis, and verification.
 - Codex and Claude plugin manifests.
-- Optional remote Designer MCP configuration. OAuth remains chart-scoped and
-  publication always requires an explicit human decision.
+- MCP configuration for both servers: the anonymous documentation MCP and the
+  OAuth Designer MCP. Publication always requires an explicit human decision.
+- A Claude Code hook that adds a short SeatLayer reminder to the assistant's
+  context when an edit touches SeatLayer code. It never blocks or approves an
+  edit.
 
 ## Quick start
 
@@ -122,7 +133,15 @@ cd seatlayer-ai-toolkit
 
 ### Codex
 
-Install the skill into your personal Codex skills directory:
+Install the plugin from this repository's marketplace:
+
+```bash
+codex plugin marketplace add seatlayer/seatlayer-ai-toolkit
+codex plugin add seatlayer@seatlayer-ai-toolkit
+```
+
+Or install only the skill into your personal Codex skills directory from a
+clone:
 
 ```bash
 node scripts/install.mjs --target codex
@@ -136,7 +155,14 @@ Use $integrate-seatlayer to add reserved seating to this repository.
 
 ### Claude Code
 
-Load the complete plugin:
+Install the plugin from this repository's marketplace:
+
+```bash
+claude plugin marketplace add seatlayer/seatlayer-ai-toolkit
+claude plugin install seatlayer@seatlayer-ai-toolkit
+```
+
+Or load a local clone for one session:
 
 ```bash
 claude --plugin-dir /absolute/path/to/seatlayer-ai-toolkit
@@ -224,11 +250,15 @@ guidance:
 - [Review SeatLayer integration best practices](https://docs.seatlayer.io/integrations/best-practices/)
   before going live.
 
-## Designer MCP
+## MCP servers
 
-The included `.mcp.json` points to SeatLayer's remote Streamable HTTP MCP
-resource. It uses OAuth 2.1 with PKCE and a chart-scoped authorization boundary.
-Availability and publish capability are shown in the SeatLayer dashboard.
+The included `.mcp.json` configures two remote Streamable HTTP servers:
+
+- `seatlayer-docs` at `https://docs.seatlayer.io/mcp`: public, anonymous,
+  read-only product knowledge and documentation search.
+- `seatlayer-designer` at `https://mcp.seatlayer.io/mcp`: chart authoring with
+  OAuth 2.1 and PKCE, scoped to one chart or one workspace. Availability and
+  publish permission are shown on the dashboard's Agent connections page.
 
 The integration skill must not use Designer MCP unless the task involves chart
 authoring or review. It must never publish without the user's explicit
@@ -236,16 +266,15 @@ authorization.
 
 ## Development
 
-Requirements: Node.js 18 or newer and Python 3 for the optional upstream skill
-and plugin validators.
+Requirements: Node.js 18 or newer.
 
 ```bash
 npm run validate
 npm run check:docs
 ```
 
-The first command validates manifests, the portable skill, installer behavior,
-and deterministic diagnostics. The second resolves every referenced SeatLayer
+The first command validates manifests, the portable skill, the hook, installer
+behavior, and deterministic diagnostics. The second resolves every referenced SeatLayer
 documentation URL. The repository intentionally has no runtime dependencies.
 
 ## License

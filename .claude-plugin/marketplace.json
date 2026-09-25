@@ -6,14 +6,14 @@
   },
   "metadata": {
     "description": "Agent skills and diagnostics for hosted, SDK, private-access, and server-side SeatLayer integrations.",
-    "version": "0.2.0"
+    "version": "0.3.0"
   },
   "plugins": [
     {
       "name": "seatlayer",
       "description": "Build, diagnose, and verify SeatLayer integrations inside an existing application.",
       "source": "./",
-      "version": "0.2.0",
+      "version": "0.3.0",
       "author": {
         "name": "SeatLayer"
       },
@@ -24,22 +24,7 @@
         "checkout",
         "mcp"
       ],
-      "strict": true,
-      "commands": [
-        "./commands/doctor.md",
-        "./commands/integrate.md",
-        "./commands/setup.md",
-        "./commands/verify.md"
-      ],
-      "skills": [
-        "./skills/integrate-seatlayer"
-      ],
-      "mcpServers": [
-        "./.mcp.json"
-      ],
-      "hooks": [
-        "./hooks/hooks.json"
-      ]
+      "strict": true
     }
   ]
 }

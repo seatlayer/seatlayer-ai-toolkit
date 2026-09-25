@@ -1,6 +1,6 @@
 ---
 name: integrate-seatlayer
-description: Add, review, diagnose, or verify SeatLayer integrations inside existing applications. Use for managed hosted booking, direct links, embeds, Organizer Websites, Buyer SDK installation, SeatPicker or SeatingChart, mobile SDKs, server SDKs, custom checkout, holds, private or partner sales, buyer access sessions, channels, workspaces, Embedded Designer or control room, webhooks, analytics, checkout recovery, go-live review, and SeatLayer-related code generation or troubleshooting.
+description: Add, review, diagnose, or verify SeatLayer integrations inside existing applications. Use for Hosted Ticketing (event setup, ticket limits, payment gateways, hosted checkout, embeds, Organizer Websites), Buyer SDK installation, SeatPicker or SeatingChart, 3D views, mobile SDKs, server SDKs, custom checkout, holds, booking, resale, Seasons and Performance Groups, private or partner sales, buyer access sessions, channels, workspaces, Embedded Designer, control room or SeatManager, webhooks, API errors and rate limits, migration from seats.io, analytics, checkout recovery, go-live review, and SeatLayer-related code generation or troubleshooting.
 ---
 
 # Integrate SeatLayer
@@ -68,6 +68,8 @@ Then add only the required surface:
   HTTP when it supports the required operation.
 - Embedded Designer for organizer chart editing.
 - `SeatManager` for an embedded operator board.
+- Resale endpoints only for Platform events where the host issues tickets.
+- Season or Performance Group APIs only when one purchase spans several dates.
 - Workspaces and server APIs for multi-tenant platforms.
 - Designer MCP only for authorized chart authoring or review.
 
@@ -91,7 +93,10 @@ Implement the invariants for the selected profile:
 9. Keep buyer access tokens in memory and bind them to the exact event and
    origin; never log, persist, or place them in URLs.
 10. Require a short audit reason for privileged channel overrides.
-11. Verify webhook signatures from the raw body and deduplicate occurrences.
+11. Verify webhook signatures from the raw body, deduplicate occurrences, and
+    keep a default branch for event names the code does not know.
+12. Branch on the API `error` code, retry only what the live error contract
+    marks retryable, and wait for `Retry-After` on `429` and `503`.
 
 Do not log or return secret keys, raw credentials, full authorization headers,
 or webhook secrets.
@@ -144,12 +149,15 @@ manual verification and report skipped checks.
 
 ## Use Designer MCP carefully
 
-When the task involves chart authoring or review, read
+When the task involves chart authoring, chart review, Event Configurations, or
+allowed live event controls, read
 [references/designer-mcp.md](references/designer-mcp.md). Begin with
 `get_capabilities`, follow the staged semantic workflow, and never publish
 without explicit user authorization.
 
-Do not use Designer MCP for ordinary SDK or server integration work.
+Designer MCP cannot hold, book, or refund seats. Do not use it for ordinary SDK
+or server integration work. For read-only product questions, the public
+knowledge MCP at `https://docs.seatlayer.io/mcp` needs no account.
 
 ## Hand off clearly
 
