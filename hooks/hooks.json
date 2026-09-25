@@ -1,13 +1,14 @@
 {
-  "description": "Reminds Claude to consult SeatLayer's live contracts before editing integration code. Informational only.",
+  "description": "Reminds the assistant to consult SeatLayer's live contracts before editing SeatLayer integration code. Informational only; it never blocks or approves an edit.",
   "hooks": {
     "PreToolUse": [
       {
-        "matcher": "Write|Edit",
+        "matcher": "Write|Edit|MultiEdit",
         "hooks": [
           {
-            "type": "prompt",
-            "prompt": "This hook is informational only and must never block an edit. Inspect the target path and proposed content. If, and only if, source code touches SeatLayer hosted checkout, SDK, API, private access, channels, holds, inventory, booking, webhooks, embedded Designer, control room, or MCP logic, remind the assistant to use the integrate-seatlayer skill, load the focused live Markdown contract from docs.seatlayer.io, choose the commerce owner first, keep secrets and buyer capabilities out of client storage and logs, and rerun the doctor after implementation. Managed hosted checkout must not gain a duplicate host booking flow; platform/custom checkout keeps browser holds and server booking. Otherwise add no commentary. End with the single word 'approve' on its own line."
+            "type": "command",
+            "command": "node \"${CLAUDE_PLUGIN_ROOT}/hooks/seatlayer-edit-reminder.mjs\"",
+            "timeout": 10
           }
         ]
       }

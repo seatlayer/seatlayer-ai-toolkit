@@ -45,7 +45,20 @@ Do not require or create a host booking endpoint for this profile.
 | Browser build | No secret value or server-only booking helper |
 | Mobile/keyboard | Picker and surrounding checkout remain operable |
 | Webhook replay | Occurrence is deduplicated |
+| Unknown webhook event name | Handler acknowledges it through a default branch without failing |
+| Rate limited (`429`) | Client waits for `Retry-After`; no tight retry loop, no duplicate hold |
+| Retryable `409` | Retries only when `retryable: true`; other conflicts reach the buyer or operator |
 | Invalid webhook signature | No business state mutation |
+
+## Resale matrix (Platform events only)
+
+| Case | Evidence |
+|---|---|
+| List booked seats | Seats show as `resale`; booked counts are unchanged |
+| Listing bought whole | A buyer cannot hold part of one `listingId` |
+| Resale hold expires | Seat returns to the resale market, not to free |
+| Resale booked | Seat moves to the new `bookingRef`; the host pays or refunds the original holder |
+| Hosted Ticketing event | Listing is refused with `resale_unsupported_on_seatlayer_checkout` |
 
 ## Private and channel-access matrix
 

@@ -53,11 +53,22 @@ assert(
     packageJson.version === marketplace.metadata.version,
   "Package and plugin versions must match",
 );
+const marketplaceEntry = marketplace.plugins?.[0] ?? {};
+assert(marketplaceEntry.name === "seatlayer", "Unexpected marketplace plugin name");
+// Codex refuses to install a plugin whose manifest name differs from the
+// marketplace entry, so all three names must agree.
+assert(codexManifest.name === marketplaceEntry.name, "Codex plugin name must match the marketplace entry");
+assert(claudeManifest.name === marketplaceEntry.name, "Claude plugin name must match the marketplace entry");
 assert(
-  codexManifest.name === "seatlayer-ai-toolkit",
-  "Unexpected Codex plugin name",
+  marketplaceEntry.version === packageJson.version,
+  "Marketplace plugin version must match the package version",
 );
-assert(claudeManifest.name === "seatlayer", "Unexpected Claude plugin name");
+// Claude Code rejects the file-path and array forms of `hooks` in a marketplace
+// entry, and the plugin then fails to load. Components come from the default
+// locations (commands/, skills/, hooks/hooks.json, .mcp.json) instead.
+for (const key of ["hooks", "commands", "skills", "mcpServers"]) {
+  assert(!(key in marketplaceEntry), `Marketplace entry must not declare ${key}; use the default plugin location`);
+}
 assert(
   /^---\nname: integrate-seatlayer\ndescription: [^\n]+\n---/.test(skill),
   "Skill frontmatter must contain only name and description",
@@ -71,6 +82,10 @@ assert(
     "https://mcp.seatlayer.io/mcp",
   "Designer MCP URL is missing or incorrect",
 );
+assert(
+  mcp.mcpServers?.["seatlayer-docs"]?.url === "https://docs.seatlayer.io/mcp",
+  "Documentation MCP URL is missing or incorrect",
+);
 
 for (const requiredRoute of [
   "/llms.txt",
@@ -83,6 +98,9 @@ for (const requiredRoute of [
   "/server-api/booking/index.md",
   "/server-sdk/install/index.md",
   "/start/choose-an-integration/index.md",
+  "/server-api/errors/index.md",
+  "/server-api/rate-limits/index.md",
+  "/webhooks/events/index.md",
 ]) {
   assert(
     integrationMap.includes(`https://docs.seatlayer.io${requiredRoute}`) ||
@@ -106,11 +124,19 @@ for (const file of files) {
   );
 }
 
-for (const command of marketplace.plugins[0].commands) {
-  await stat(resolve(root, command));
+for (const command of ["doctor", "integrate", "setup", "verify"]) {
+  await stat(resolve(root, `commands/${command}.md`));
 }
-for (const skillPath of marketplace.plugins[0].skills) {
-  await stat(resolve(root, skillPath));
+await stat(resolve(root, "skills/integrate-seatlayer/SKILL.md"));
+
+const hooks = JSON.parse(await readFile(resolve(root, "hooks/hooks.json"), "utf8"));
+for (const group of hooks.hooks?.PreToolUse ?? []) {
+  for (const hook of group.hooks ?? []) {
+    assert(hook.type === "command", "Hooks must be command hooks that print valid JSON");
+    const script = /\$\{CLAUDE_PLUGIN_ROOT\}\/([^"\s]+)/.exec(hook.command)?.[1];
+    assert(script, "Hook command must run a script inside the plugin");
+    await stat(resolve(root, script));
+  }
 }
 
 process.stdout.write(

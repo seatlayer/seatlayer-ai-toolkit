@@ -3,6 +3,10 @@
     "seatlayer-designer": {
       "type": "http",
       "url": "https://mcp.seatlayer.io/mcp"
+    },
+    "seatlayer-docs": {
+      "type": "http",
+      "url": "https://docs.seatlayer.io/mcp"
     }
   }
 }
