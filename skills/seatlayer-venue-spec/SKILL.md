@@ -62,9 +62,11 @@ row, tables and chairs, standing capacity, or booths.
    usually `items`. Other top-level fields: `$schema`, `stage`, `base`. No
    other fields anywhere: unknown fields are errors.
 2. Never give coordinates. Say where in words; SeatLayer places everything.
-3. List items from the stage outward. Each item is placed beside everything
+3. List items from the stage outward. Each item goes against everything
    placed before it: `placement` is `front` (toward the stage), `rear`
-   (default), `left` or `right`.
+   (default), `left` or `right`. Two `rear` items stand one behind the other.
+   To put a landmark, sign or area next to something named earlier ("the
+   entrance next to the bar"), give `near` with that name and `side`.
 4. One category sells one kind of thing: row seats (`rows`, `curvedRows`),
    table chairs (`tables`), `booths`, or `standing`. If one price covers two
    kinds, make two categories.
@@ -94,18 +96,18 @@ Stage `kind`: `rect` (default), `rounded`, `arc`, `thrust`, `runway`, `round`,
 ## Items
 
 `*` marks a required field. Names (`label`, `section`, `category`,
-`nearSection`) are up to 80 characters.
+`near`) are up to 80 characters.
 
 | type | Fields |
 |---|---|
 | `rows` | `rowCount`* 1-100, `seatsPerRow`* 1-300 (the whole row, across all blocks), `blocks` 1-8 (default 1; 2 = one centre aisle), `category`, `placement`, `section` |
-| `curvedRows` | `rowCount`* 1-60, `spreadDegrees` 20-360 (default 100; 180 semicircle; 360 all round), `seatsPerRow` 2-300 (leave out to fit), `aisles` none/center/two, `firstRowDistanceM` 1-200 (default 4), `category`, `section`. Always behind the seats already placed; no `placement` |
-| `tables` | `tableRows`* 1-20, `tableColumns`* 1-20, `seatsPerTable` 1-20 (default 8), `shape` round/rect, `category`, `placement` |
+| `curvedRows` | `rowCount`* 1-60, `spreadDegrees` 20-360 (180 semicircle; 360 all round; leave out to fit `seatsPerRow`, else 100), `seatsPerRow` 2-300 (leave out to fit), `aisles` none/center/two, `firstRowDistanceM` 1-200 (default 4), `category`, `section`. Always behind the seats already placed; no `placement` |
+| `tables` | `tableRows`* 1-20, `tableColumns`* 1-20, `seatsPerTable` 1-20 (default 8), `shape` round/rect, `category`, `placement`, `section` |
 | `standing` | `capacity`* 1-100000, `label` (default "General Admission"), `category`, `placement` |
-| `booths` | `boothRows`* 1-30, `boothColumns`* 1-30, `category`, `placement` |
-| `landmark` | exactly one of `role` or `icon`; `label`, `placement`, `nearSection`, `side` |
-| `text` | `text`* up to 120 characters, `size` small/medium/large, `showAt` always/when-it-fits/close-up, `placement`, `nearSection`, `side` |
-| `area` | `label`*, `widthM`* and `depthM`* 0.5-400 metres, `shape` rect/ellipse, `placement`, `nearSection`, `side`. For spaces nobody books: dance floor, desk, lounge |
+| `booths` | `boothRows`* 1-30, `boothColumns`* 1-30, `category`, `placement`, `section` |
+| `landmark` | exactly one of `role` or `icon`; `label`, `placement`, `near`, `side` |
+| `text` | `text`* up to 120 characters, `size` small/medium/large, `showAt` always/when-it-fits/close-up, `placement`, `near`, `side` |
+| `area` | `label`*, `widthM`* and `depthM`* 0.5-400 metres, `shape` rect/ellipse, `placement`, `near`, `side`. For spaces nobody books: dance floor, desk, lounge |
 
 `seatsPerRow` counts the whole row: 24 with `blocks: 2` is two blocks of 12 (an odd seat goes to the first block).
 
@@ -118,10 +120,14 @@ food, bar, coffee, water, merch, screen, sound-booth, entrance, exit,
 emergency-exit, stairs, elevator, parking, wheelchair, hearing.
 
 `landmark`, `text` and `area` also take `placement: "center"`, where `front`
-means between the stage and the seats. `nearSection` names a section made
-earlier, by an item's `section` or by `base.sectionNames`; `side` (front,
-rear, left, right; default rear) says which side of it, and only works with
-`nearSection`.
+means between the stage and the seats. `near` names something made earlier:
+a section, landmark, area or standing area (for example `"Bar"`); `side`
+(front, rear, left, right; default rear) says which side of it, and only works
+with `near`.
+
+When the venue has sections, tables and booths without a `section` get one
+named after their category. Phones open the map on section blocks, so
+anything outside a section would not show there.
 
 ## base
 
