@@ -119,8 +119,8 @@ Key: `expo`
   "stage": false,
   "items": [
     { "type": "booths", "boothRows": 4, "boothColumns": 10 },
-    { "type": "area", "label": "Registration desk", "widthM": 6, "depthM": 2, "placement": "rear" },
     { "type": "landmark", "role": "entrance", "label": "Entrance", "placement": "rear" },
+    { "type": "area", "label": "Registration desk", "widthM": 6, "depthM": 2, "near": "Entrance", "side": "left" },
     { "type": "landmark", "role": "concession", "label": "Café", "placement": "right" }
   ]
 }
