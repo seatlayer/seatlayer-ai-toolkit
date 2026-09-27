@@ -6,7 +6,8 @@ import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const toolkitRoot = resolve(dirname(fileURLToPath(import.meta.url)), "..");
-const sourceSkill = resolve(toolkitRoot, "skills/integrate-seatlayer");
+/** Skills this toolkit can install; the first is the default. */
+export const SKILLS = ["integrate-seatlayer", "seatlayer-venue-spec"];
 
 function readOption(args, name) {
   const index = args.indexOf(name);
@@ -26,11 +27,15 @@ export async function installSkill(args = process.argv.slice(2)) {
   const target = readOption(args, "--target");
   const project = resolve(readOption(args, "--project") ?? process.cwd());
   const force = args.includes("--force");
+  const skill = readOption(args, "--skill") ?? SKILLS[0];
+  if (!SKILLS.includes(skill)) {
+    throw new Error(`Choose --skill ${SKILLS.join(" or --skill ")}.`);
+  }
 
   const destinations = {
-    codex: resolve(homedir(), ".codex/skills/integrate-seatlayer"),
-    claude: resolve(homedir(), ".claude/skills/integrate-seatlayer"),
-    github: resolve(project, ".github/skills/integrate-seatlayer"),
+    codex: resolve(homedir(), `.codex/skills/${skill}`),
+    claude: resolve(homedir(), `.claude/skills/${skill}`),
+    github: resolve(project, `.github/skills/${skill}`),
   };
 
   if (!target || !destinations[target]) {
@@ -50,10 +55,10 @@ export async function installSkill(args = process.argv.slice(2)) {
   }
 
   await mkdir(dirname(destination), { recursive: true });
-  await cp(sourceSkill, destination, { recursive: true });
+  await cp(resolve(toolkitRoot, "skills", skill), destination, { recursive: true });
 
   process.stdout.write(
-    `Installed integrate-seatlayer for ${target}: ${destination}\n`,
+    `Installed ${skill} for ${target}: ${destination}\n`,
   );
   return destination;
 }

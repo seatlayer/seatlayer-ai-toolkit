@@ -153,7 +153,8 @@ When the task involves chart authoring, chart review, Event Configurations, or
 allowed live event controls, read
 [references/designer-mcp.md](references/designer-mcp.md). Begin with
 `get_capabilities`, follow the staged semantic workflow, and never publish
-without explicit user authorization.
+without explicit user authorization. To build a new chart from a description
+of the venue, use the `seatlayer-venue-spec` skill instead.
 
 Designer MCP cannot hold, book, or refund seats. Do not use it for ordinary SDK
 or server integration work. For read-only product questions, the public

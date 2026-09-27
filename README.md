@@ -93,7 +93,13 @@ Choose the interface for the task:
   validates, reviews and publishes charts, manages Event Configurations, and,
   when the admin allows it, controls live sections and seat blocks. It cannot
   hold, book or refund seats. Use the documented approval flow before
-  publishing changes.
+  publishing changes. Chat hosts can connect to
+  `https://mcp.seatlayer.io/mcp?tools=build` for the smaller set of tools that
+  build, edit, check and publish.
+- **Charts from a description:** a [Venue Spec](https://docs.seatlayer.io/agents/venue-spec/)
+  is a short JSON file that says what a venue has and where, in words. With the
+  Designer MCP an agent checks and builds it in one call; without it, the user
+  pastes the agent's reply into the Designer.
 - **Buyer seat selection:** [WebMCP seat-selection tools](https://docs.seatlayer.io/buyer-sdk/webmcp-agent-tools/)
   let a compatible browser assistant describe a chart, find seats, and update
   the selection when the buyer integration opts in. Payment remains in the
@@ -110,11 +116,17 @@ Designer MCP, and buyer WebMCP tools are separate interfaces.
   resale, Seasons and Season Best Available, API errors and rate limits, the 40
   webhook events, SeatManager hover prices, Click the plan, and migration from
   seats.io.
+- `seatlayer-venue-spec`: an Agent Skill that turns a description of a venue
+  ("12 rows of 18, front two VIP, bar at the back") into a Venue Spec and
+  builds the chart through the Designer MCP, or hands the user a file to paste
+  into the Designer. Worked examples for a theatre, wedding, club, arena, expo
+  and comedy club are in `examples.md`.
 - `seatlayer-ai doctor`: deterministic checks for exposed credentials,
   server packages in client code, browser-side booking, unsafe buyer-access
   token handling, missing idempotency and conflict handling, unaudited channel
   overrides, and weak webhook verification.
-- Claude Code commands for setup, integration, diagnosis, and verification.
+- Claude Code commands for setup, integration, diagnosis, verification, and
+  `/seatlayer:chart` to build a chart from a description.
 - Codex and Claude plugin manifests.
 - MCP configuration for both servers: the anonymous documentation MCP and the
   OAuth Designer MCP. Publication always requires an explicit human decision.
@@ -153,6 +165,12 @@ Then ask:
 Use $integrate-seatlayer to add reserved seating to this repository.
 ```
 
+For building charts from a description, add the Venue Spec skill:
+
+```bash
+node scripts/install.mjs --target codex --skill seatlayer-venue-spec
+```
+
 ### Claude Code
 
 Install the plugin from this repository's marketplace:
@@ -175,6 +193,7 @@ Available commands:
 /seatlayer:integrate
 /seatlayer:doctor
 /seatlayer:verify
+/seatlayer:chart 400-seat theatre, 10 rows of 24 at the front, bar at the back
 ```
 
 ### GitHub Copilot
@@ -186,7 +205,7 @@ node scripts/install.mjs --target github --project /path/to/project
 ```
 
 This writes `.github/skills/integrate-seatlayer/` without modifying application
-code.
+code. Add `--skill seatlayer-venue-spec` for the Venue Spec skill.
 
 ### Any coding agent
 
@@ -194,6 +213,9 @@ Give the agent these two resources:
 
 - `https://docs.seatlayer.io/llms.txt`
 - `skills/integrate-seatlayer/SKILL.md`
+
+To build a chart from a description, give it
+`skills/seatlayer-venue-spec/SKILL.md` and `examples.md` instead.
 
 The complete documentation corpus is available at
 `https://docs.seatlayer.io/llms-full.txt`, but focused page routes are preferred
