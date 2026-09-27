@@ -40,7 +40,7 @@ checkout.
   that module on the account.
 - Access tokens expire after an hour. Each connection can make up to 300 tool
   calls per minute.
-- The server lists only the tools a connection may use (127 in total, grouped
+- The server lists only the tools a connection may use (132 in total, grouped
   by area in the live page). Call `get_capabilities` for the actual list; never
   assume a tool exists.
 
@@ -51,7 +51,7 @@ connect with a smaller set by adding `?tools=` to the server URL:
 
 | URL | Tools for |
 |---|---|
-| `https://mcp.seatlayer.io/mcp?tools=build` | Build, edit, price, check and publish charts (58 tools) |
+| `https://mcp.seatlayer.io/mcp?tools=build` | Build, edit, price, check and publish charts (63 tools) |
 | `?tools=build,trace` | Adds tracing a floor-plan image |
 | `?tools=build,3d` | Adds heights, sightlines and seat-view evidence |
 | `?tools=build,events` | Adds Event Configurations and live event controls |

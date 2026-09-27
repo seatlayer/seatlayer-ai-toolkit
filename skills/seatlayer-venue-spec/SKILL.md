@@ -117,7 +117,10 @@ coat, wall, rail, suite, obstruction.
 Landmark `icon`: restroom-men, restroom-women, restroom-accessible, restrooms,
 first-aid, coat-check, atm, info, lost-found, charging, smoking, no-smoking,
 food, bar, coffee, water, merch, screen, sound-booth, entrance, exit,
-emergency-exit, stairs, elevator, parking, wheelchair, hearing.
+emergency-exit, stairs, elevator, parking, wheelchair, hearing, box-office,
+escalator, ramp, taxi, transit, bike-parking, meeting-point, security,
+lockers, baby-change, prayer-room, quiet-room, wifi, vip-lounge,
+accessible-entrance, assistance-dog.
 
 `landmark`, `text` and `area` also take `placement: "center"`, where `front`
 means between the stage and the seats. `near` names something made earlier:
@@ -197,7 +200,9 @@ More in `examples.md`: wedding, club, arena, expo and comedy club.
 
 ## Not possible in a Venue Spec
 
-Exact positions, drawn section outlines, gates and step-free routes as their
-own objects, and tracing a floor-plan image. Say so plainly. The user finishes
-those in the SeatLayer Designer; image tracing has its own MCP workflow
+Exact positions, drawn section outlines, gates and step-free routes, and
+tracing a floor-plan image. Say so plainly. Add gates and step-free routes
+after the build: with `place_gate` and `add_step_free_route` when connected,
+or in the SeatLayer Designer. Outlines and exact positions are finished in the
+Designer; image tracing has its own MCP workflow
 (https://docs.seatlayer.io/agents/designer-mcp/).
