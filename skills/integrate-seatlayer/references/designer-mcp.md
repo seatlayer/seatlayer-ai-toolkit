@@ -40,11 +40,37 @@ checkout.
   that module on the account.
 - Access tokens expire after an hour. Each connection can make up to 300 tool
   calls per minute.
-- The server lists only the tools a connection may use (up to 120, grouped by
-  area in the live page). Call `get_capabilities` for the actual list; never
+- The server lists only the tools a connection may use (132 in total, grouped
+  by area in the live page). Call `get_capabilities` for the actual list; never
   assume a tool exists.
 
-## Workflow
+## Toolsets
+
+Every tool's description is sent to the model on every turn. A chat host can
+connect with a smaller set by adding `?tools=` to the server URL:
+
+| URL | Tools for |
+|---|---|
+| `https://mcp.seatlayer.io/mcp?tools=build` | Build, edit, price, check and publish charts (63 tools) |
+| `?tools=build,trace` | Adds tracing a floor-plan image |
+| `?tools=build,3d` | Adds heights, sightlines and seat-view evidence |
+| `?tools=build,events` | Adds Event Configurations and live event controls |
+| `https://mcp.seatlayer.io/mcp` | Every tool |
+
+A toolset only narrows what is listed. The connection's permissions still
+decide what any call may do.
+
+## Build a new venue from a description
+
+Use the `seatlayer-venue-spec` skill in this toolkit. The agent writes the whole
+venue as one short JSON Venue Spec (categories, prices, stage, rows, tables,
+standing, booths, landmarks, all in words, never coordinates), checks it with
+`build_from_venue_spec` and `checkOnly: true`, then builds it in one call.
+Every problem comes back with the field that needs fixing. The same file can be
+pasted into the Designer (**New from → Paste from an AI…**) when no connection
+is available. Format: `https://docs.seatlayer.io/agents/venue-spec/index.md`.
+
+## Workflow for tracing and review
 
 1. Call `get_capabilities`; do not assume deployed tools or schemas.
 2. Authorize the intended chart or workspace scope.

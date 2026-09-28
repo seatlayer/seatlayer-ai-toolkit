@@ -30,6 +30,6 @@ if (command === "doctor") {
 Usage:
   seatlayer-ai doctor [repository] [--json] [--strict]
   seatlayer-ai verify [repository]
-  seatlayer-ai install --target codex|claude|github [--project path] [--force]
+  seatlayer-ai install --target codex|claude|github [--skill integrate-seatlayer|seatlayer-venue-spec] [--project path] [--force]
 `);
 }

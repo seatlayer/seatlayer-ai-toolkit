@@ -6,14 +6,14 @@
   },
   "metadata": {
     "description": "Agent skills and diagnostics for hosted, SDK, private-access, and server-side SeatLayer integrations.",
-    "version": "0.3.0"
+    "version": "0.4.0"
   },
   "plugins": [
     {
       "name": "seatlayer",
       "description": "Build, diagnose, and verify SeatLayer integrations inside an existing application.",
       "source": "./",
-      "version": "0.3.0",
+      "version": "0.4.0",
       "author": {
         "name": "SeatLayer"
       },

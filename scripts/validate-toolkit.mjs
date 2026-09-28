@@ -124,7 +124,18 @@ for (const file of files) {
   );
 }
 
-for (const command of ["doctor", "integrate", "setup", "verify"]) {
+const venueSpecSkill = await readFile(
+  resolve(root, "skills/seatlayer-venue-spec/SKILL.md"),
+  "utf8",
+);
+assert(
+  /^---\nname: seatlayer-venue-spec\ndescription: [^\n]+\n---/.test(venueSpecSkill),
+  "Venue Spec skill frontmatter must contain only name and description",
+);
+assert(venueSpecSkill.length < 15_000, "Venue Spec SKILL.md is too large");
+await stat(resolve(root, "skills/seatlayer-venue-spec/examples.md"));
+
+for (const command of ["chart", "doctor", "integrate", "setup", "verify"]) {
   await stat(resolve(root, `commands/${command}.md`));
 }
 await stat(resolve(root, "skills/integrate-seatlayer/SKILL.md"));
