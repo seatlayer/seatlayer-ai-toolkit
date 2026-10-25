@@ -1,13 +1,13 @@
-# Designer MCP
+# SeatLayer MCP
 
-Use Designer MCP only for chart authoring, chart review, Event Configurations,
-or permitted live event controls. Ordinary SDK and booking integration does not
-need it.
+Use the SeatLayer MCP for chart authoring and review, Event Configurations, and
+running events an organiser has allowed: sales, prices, channels, orders and
+reports. Ordinary SDK and booking integration does not need it.
 
 The remote resource is `https://mcp.seatlayer.io/mcp`. It uses Streamable HTTP,
 OAuth 2.1 authorization code flow with PKCE S256, the `resource` parameter, and
-rotating refresh tokens. The dashboard's **Agent connections** page shows the
-URL and publish permission for each environment.
+rotating refresh tokens. The dashboard's **AI agents** page shows the URL for
+each environment.
 
 The public knowledge MCP at `https://docs.seatlayer.io/mcp` is a different
 server: anonymous, read-only product knowledge and documentation search. Use it
@@ -17,32 +17,38 @@ for integration questions, not chart edits.
 
 | Covered | Not covered |
 |---|---|
-| Building and editing charts: sections, rows, seats, tables, booths, GA areas, floors, zones, text, shapes, categories, theme | Holds, bookings, cancellations, refunds |
-| Tracing a chart from a reference image, with confirmed counts and labels | Payments, checkout, orders |
-| Validation, buyer previews, 3D structure, sightline scores | Sales channels and buyer access |
-| Review and publication of an approved revision | Creating events or Seasons |
-| Event Configurations: create, review, publish, bind to an event | Webhooks, API keys, members, billing |
-| Live event controls, when allowed: open, close or hide sections, block seats, move an event to the latest chart | |
+| Building and editing charts: sections, rows, seats, tables, booths, GA areas, floors, zones, text, shapes, categories, theme | Holds, bookings and checkout |
+| Tracing a chart from a reference image, with confirmed counts and labels | Taking or returning money: a refund or cancellation is a request an admin approves |
+| Validation, buyer previews, 3D structure, sightline scores | Webhooks, API keys, members, billing |
+| Review and publication of an approved revision | Buyers' personal details in reports |
+| Events: create, edit, copy, open and close online sales, end an event | |
+| Prices and ticket releases, sales channels and their links | |
+| Live seats: block, unblock, hold back for guests, close sections | |
+| Orders: find them, resend tickets, request a refund | |
+| Reports and History | |
 
-An agent on this server can prepare and publish the map buyers use, but it
-cannot hold or sell a seat. Selling stays with the Server API and the host's
+An agent on this server can prepare the map and run the event, but it cannot
+sell a seat or move money. Selling stays with the Server API and the host's
 checkout.
 
 ## Scope and permissions
 
-- The admin approves each connection and chooses **one chart** (the default) or
-  **every chart in this workspace**.
-- **Manage live events** is off unless the admin turns it on. Live controls
-  never change a hold or a booking, and blocking refuses the whole change if a
-  seat is held or booked.
+- An admin approves each connection on a consent screen. One tap on **Allow**
+  gives the agent the workspace and every permission; **Customize** narrows it
+  to one chart or turns permissions off.
+- A change to an event on sale is a plan first: the agent shows it and applies
+  it only after the person's yes to that plan in the chat. Blocking refuses the
+  whole change if a seat is held or booked.
+- Admins get an email about each agent change, the event's History names the
+  agent, and an agent publish can be undone in one click.
 - Publishing and approval tools need publish permission. Reference, blueprint
   and capacity tools need the reference-chart feature; Event Configurations need
   that module on the account.
 - Access tokens expire after an hour. Each connection can make up to 300 tool
   calls per minute.
-- The server lists only the tools a connection may use (132 in total, grouped
-  by area in the live page). Call `get_capabilities` for the actual list; never
-  assume a tool exists.
+- The server lists only the tools a connection may use (160 with every
+  permission). Call `get_capabilities` for the actual list; never assume a tool
+  exists.
 
 ## Toolsets
 
@@ -54,7 +60,9 @@ connect with a smaller set by adding `?tools=` to the server URL:
 | `https://mcp.seatlayer.io/mcp?tools=build` | Build, edit, price, check and publish charts (63 tools) |
 | `?tools=build,trace` | Adds tracing a floor-plan image |
 | `?tools=build,3d` | Adds heights, sightlines and seat-view evidence |
-| `?tools=build,events` | Adds Event Configurations and live event controls |
+| `?tools=events` | Events on sale: seats, plans, reports, prices, sales, channels, orders (46 tools) |
+| `?tools=discover` | About ten tools; `search_tools` finds the rest |
+| `?readonly=1` | Only tools that read; any write is refused. Combines with a set |
 | `https://mcp.seatlayer.io/mcp` | Every tool |
 
 A toolset only narrows what is listed. The connection's permissions still
