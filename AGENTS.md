@@ -13,5 +13,5 @@ When product behavior changes:
 5. Run the doctor against a real integration before release.
 
 Keep the toolkit dependency-free unless a dependency is essential. Commands
-must be safe by default, diagnostics must be read-only, and Designer MCP must
+must be safe by default, diagnostics must be read-only, and the SeatLayer MCP must
 never publish without explicit user authorization.

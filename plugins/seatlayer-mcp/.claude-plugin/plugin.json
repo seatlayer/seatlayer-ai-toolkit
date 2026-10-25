@@ -1,0 +1,19 @@
+{
+  "name": "seatlayer-mcp",
+  "version": "0.1.0",
+  "description": "Six workflows for running SeatLayer through the SeatLayer MCP: block seats safely, apply chart feedback, client reports, publish and apply, event-day jobs and floor-plan tracing. Live changes wait for your yes in the chat; refunds need an admin.",
+  "author": {
+    "name": "SeatLayer",
+    "url": "https://seatlayer.io"
+  },
+  "homepage": "https://docs.seatlayer.io/agents/designer-mcp/",
+  "keywords": [
+    "seatlayer",
+    "mcp",
+    "seating",
+    "ticketing",
+    "events"
+  ],
+  "repository": "https://github.com/seatlayer/seatlayer-ai-toolkit",
+  "license": "MIT"
+}

@@ -5,7 +5,7 @@
     "url": "https://seatlayer.io"
   },
   "metadata": {
-    "description": "Agent skills and diagnostics for hosted, SDK, private-access, and server-side SeatLayer integrations.",
+    "description": "Agent skills and diagnostics for SeatLayer integrations, and the SeatLayer MCP skills plugin for running charts and events from Claude Code.",
     "version": "0.4.0"
   },
   "plugins": [
@@ -23,6 +23,24 @@
         "reserved-seating",
         "checkout",
         "mcp"
+      ],
+      "strict": true
+    },
+    {
+      "name": "seatlayer-mcp",
+      "description": "Six workflows for running SeatLayer through the SeatLayer MCP: block seats safely, apply chart feedback, client reports, publish and apply, event-day jobs and floor-plan tracing.",
+      "source": "./plugins/seatlayer-mcp",
+      "version": "0.1.0",
+      "author": {
+        "name": "SeatLayer"
+      },
+      "license": "MIT",
+      "keywords": [
+        "seatlayer",
+        "mcp",
+        "seating",
+        "ticketing",
+        "events"
       ],
       "strict": true
     }
