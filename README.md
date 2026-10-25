@@ -88,17 +88,17 @@ Choose the interface for the task:
   `https://docs.seatlayer.io/mcp` (11 read-only tools, such as `search_docs`,
   `get_page` and `sdks`) and [Markdown documentation index](https://docs.seatlayer.io/llms.txt)
   help an agent find the current API and SDK guidance.
-- **Chart authoring:** [Designer MCP](https://docs.seatlayer.io/agents/designer-mcp/)
-  connects an authorized agent to one chart or a workspace. It builds, traces,
-  validates, reviews and publishes charts, manages Event Configurations, and,
-  when the admin allows it, controls live sections and seat blocks. It cannot
-  hold, book or refund seats. Use the documented approval flow before
+- **Charts and events:** the [SeatLayer MCP](https://docs.seatlayer.io/agents/designer-mcp/)
+  connects an organiser's agent to a workspace or one chart. It builds, traces,
+  validates, reviews and publishes charts, manages Event Configurations, and
+  runs events: sales, prices, channels, seats on sale, orders and reports. It
+  cannot hold, book or refund seats. Use the documented approval flow before
   publishing changes. Chat hosts can connect to
   `https://mcp.seatlayer.io/mcp?tools=build` for the smaller set of tools that
   build, edit, check and publish.
 - **Charts from a description:** a [Venue Spec](https://docs.seatlayer.io/agents/venue-spec/)
   is a short JSON file that says what a venue has and where, in words. With the
-  Designer MCP an agent checks and builds it in one call; without it, the user
+  SeatLayer MCP an agent checks and builds it in one call; without it, the user
   pastes the agent's reply into the Designer.
 - **Buyer seat selection:** [WebMCP seat-selection tools](https://docs.seatlayer.io/buyer-sdk/webmcp-agent-tools/)
   let a compatible browser assistant describe a chart, find seats, and update
@@ -106,7 +106,7 @@ Choose the interface for the task:
   host checkout flow.
 
 This toolkit helps implement those integrations. The documentation MCP,
-Designer MCP, and buyer WebMCP tools are separate interfaces.
+the SeatLayer MCP, and buyer WebMCP tools are separate interfaces.
 
 ## What is included
 
@@ -118,7 +118,7 @@ Designer MCP, and buyer WebMCP tools are separate interfaces.
   seats.io.
 - `seatlayer-venue-spec`: an Agent Skill that turns a description of a venue
   ("12 rows of 18, front two VIP, bar at the back") into a Venue Spec and
-  builds the chart through the Designer MCP, or hands the user a file to paste
+  builds the chart through the SeatLayer MCP, or hands the user a file to paste
   into the Designer. Worked examples for a theatre, wedding, club, arena, expo
   and comedy club are in `examples.md`.
 - `seatlayer-ai doctor`: deterministic checks for exposed credentials,
@@ -129,7 +129,7 @@ Designer MCP, and buyer WebMCP tools are separate interfaces.
   `/seatlayer:chart` to build a chart from a description.
 - Codex and Claude plugin manifests.
 - MCP configuration for both servers: the anonymous documentation MCP and the
-  OAuth Designer MCP. Publication always requires an explicit human decision.
+  OAuth SeatLayer MCP. Publication always requires an explicit human decision.
 - A Claude Code hook that adds a short SeatLayer reminder to the assistant's
   context when an edit touches SeatLayer code. It never blocks or approves an
   edit.
@@ -278,12 +278,12 @@ The included `.mcp.json` configures two remote Streamable HTTP servers:
 
 - `seatlayer-docs` at `https://docs.seatlayer.io/mcp`: public, anonymous,
   read-only product knowledge and documentation search.
-- `seatlayer-designer` at `https://mcp.seatlayer.io/mcp`: chart authoring with
-  OAuth 2.1 and PKCE, scoped to one chart or one workspace. Availability and
-  publish permission are shown on the dashboard's Agent connections page.
+- `seatlayer-designer` at `https://mcp.seatlayer.io/mcp`: the SeatLayer MCP,
+  for charts and events, with OAuth 2.1 and PKCE, scoped to a workspace or one
+  chart. The dashboard's AI agents page shows the URL.
 
-The integration skill must not use Designer MCP unless the task involves chart
-authoring or review. It must never publish without the user's explicit
+The integration skill must not use the SeatLayer MCP unless the task involves
+chart or event work. It must never publish without the user's explicit
 authorization.
 
 ## Development
