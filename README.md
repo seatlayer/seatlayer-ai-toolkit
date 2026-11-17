@@ -23,7 +23,7 @@ the result.
 [SeatLayer for developers](https://seatlayer.io/developers/) ·
 [SeatLayer on GitHub](https://github.com/seatlayer)
 
-**Start here:** [Quickstart](https://docs.seatlayer.io/start/quickstart/) · [Holds and checkout](https://docs.seatlayer.io/buyer-sdk/holds-and-checkout/) · [Build integrations with agents](https://docs.seatlayer.io/agents/overview/) · [SDK catalog](https://docs.seatlayer.io/sdk-catalog.json) · [Pricing](https://seatlayer.io/pricing/): $0 entry, 100 free confirmed-sold-seat credits per organization each month, then $0.10 down to $0.05 a credit, and credits never expire.
+**Start here:** [Quickstart](https://docs.seatlayer.io/start/quickstart/) · [Holds and checkout](https://docs.seatlayer.io/buyer-sdk/holds-and-checkout/) · [Build integrations with agents](https://docs.seatlayer.io/agents/overview/) · [SDK catalog](https://docs.seatlayer.io/sdk-catalog.json) · [Pricing](https://seatlayer.io/pricing/): Hosted Ticketing $0.50 per ticket, your first 25 free; SDK and API 10¢ down to 5¢ per sold seat, with 100 free every month. No subscription, test mode is free, and purchased credits never expire.
 
 ## Scale evidence
 
