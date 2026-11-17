@@ -71,7 +71,8 @@ Then add only the required surface:
 - Resale endpoints only for Platform events where the host issues tickets.
 - Season or Performance Group APIs only when one purchase spans several dates.
 - Workspaces and server APIs for multi-tenant platforms.
-- Designer MCP only for authorized chart authoring or review.
+- The SeatLayer MCP only for authorized chart or event work, never for
+  application code.
 
 Do not choose a larger surface because it is easier to demonstrate.
 
@@ -147,18 +148,21 @@ are not persisted or logged, and mobile and keyboard behavior remains operable.
 Run the doctor again after implementation. Distinguish automated checks from
 manual verification and report skipped checks.
 
-## Use Designer MCP carefully
+## Use the SeatLayer MCP carefully
 
-When the task involves chart authoring, chart review, Event Configurations, or
-allowed live event controls, read
-[references/designer-mcp.md](references/designer-mcp.md). Begin with
-`get_capabilities`, follow the staged semantic workflow, and never publish
-without explicit user authorization. To build a new chart from a description
-of the venue, use the `seatlayer-venue-spec` skill instead.
+When the task involves chart authoring or review, or event set-up, prices,
+sales channels, live seat blocks, orders or reports that the connection
+allows, read [references/designer-mcp.md](references/designer-mcp.md). Begin
+with `get_capabilities`, follow the staged semantic workflow, and never
+publish without explicit user authorization. A change to an event on sale goes
+through `plan_inventory_change` and is applied only after the user's yes to
+that plan. To build a new chart from a description of the venue, use the
+`seatlayer-venue-spec` skill instead.
 
-Designer MCP cannot hold, book, or refund seats. Do not use it for ordinary SDK
-or server integration work. For read-only product questions, the public
-knowledge MCP at `https://docs.seatlayer.io/mcp` needs no account.
+The SeatLayer MCP never sells or holds a seat for a buyer, and never refunds or
+charges anyone: a refund it asks for waits for an admin. Do not use it for
+ordinary SDK or server integration work. For read-only product questions, the
+public knowledge MCP at `https://docs.seatlayer.io/mcp` needs no account.
 
 ## Hand off clearly
 

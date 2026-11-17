@@ -20,7 +20,7 @@
   "interface": {
     "displayName": "SeatLayer AI Toolkit",
     "shortDescription": "Build and verify every SeatLayer integration path.",
-    "longDescription": "Chooses the correct hosted, buyer SDK, private-access, server SDK, or operator surface; adds deterministic safety diagnostics and the optional Designer MCP connection, and builds seating charts from a description of the venue.",
+    "longDescription": "Chooses the correct hosted, buyer SDK, private-access, server SDK, or operator surface; adds deterministic safety diagnostics and the optional SeatLayer MCP connection for chart and event work, and builds seating charts from a description of the venue.",
     "developerName": "SeatLayer",
     "category": "Productivity",
     "capabilities": [],
