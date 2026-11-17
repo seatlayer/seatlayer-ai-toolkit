@@ -23,6 +23,7 @@ confirm no server credential or server-only module is present.
 | Direct booking link | Correct event opens and completes SeatLayer-managed checkout |
 | Managed embed | Correct event opens once; responsive picker remains fully visible |
 | Organizer Website | Listing is explicit and the exact event/card route opens |
+| `SeatPicker` with `checkout: 'hosted'` | Test payment fires `onOrderConfirmed`; a redirecting gateway returns to `returnUrl` on an embed domain declared in the dashboard; an event that cannot take payment fires `onCheckoutUnavailable`, then `onCheckout`, and only that hold reaches the host's booking route |
 | Hosted default | Booking remains usable without optional Event Page design |
 | Payment and return | Test payment creates one Order and returns to the branded success path |
 | Failure/cancel | Buyer can return or retry without a duplicate Order or stale hold |
@@ -46,7 +47,7 @@ Do not require or create a host booking endpoint for this profile.
 | Mobile/keyboard | Picker and surrounding checkout remain operable |
 | Webhook replay | Occurrence is deduplicated |
 | Unknown webhook event name | Handler acknowledges it through a default branch without failing |
-| Rate limited (`429`) | Client waits for `Retry-After`; no tight retry loop, no duplicate hold |
+| `429` or `503` response | Client waits for `Retry-After`; no tight retry loop |
 | Retryable `409` | Retries only when `retryable: true`; other conflicts reach the buyer or operator |
 | Invalid webhook signature | No business state mutation |
 
@@ -59,6 +60,18 @@ Do not require or create a host booking endpoint for this profile.
 | Resale hold expires | Seat returns to the resale market, not to free |
 | Resale booked | Seat moves to the new `bookingRef`; the host pays or refunds the original holder |
 | Hosted Ticketing event | Listing is refused with `resale_unsupported_on_seatlayer_checkout` |
+
+## Season matrix (web and server SDKs only)
+
+| Case | Evidence |
+|---|---|
+| Checkout owner | The season's `checkoutMode` (`seatlayer` or `server`) matches the code: no host booking for a SeatLayer-checkout season |
+| Same seat on every date | The held and booked seats carry the same labels on every included date |
+| Lost response | A retry reuses the same lifecycle and booking operation identities |
+| Rehearsal | Test mode proves hold, inspect, book, cancel and webhook delivery before sales open |
+
+Follow the go-live checklist at
+`https://docs.seatlayer.io/integrations/seasons/index.md`.
 
 ## Private and channel-access matrix
 

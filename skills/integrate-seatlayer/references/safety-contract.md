@@ -12,6 +12,13 @@ inventory, payments, bookings, cancellations, or webhooks.
   and hand off an opaque `holdId`. A trusted host server authorizes the order,
   inspects the hold, calculates the trusted charge, coordinates payment, and
   books.
+- With `checkout: 'hosted'`, a picker takes payment through SeatLayer checkout
+  and SeatLayer keeps the order. On `SeatPicker`, `onCheckout` then fires only
+  when the event cannot take payment there (after `onCheckoutUnavailable`), so
+  book from the host server only those holds. `SeasonPicker` (`onContinue`) and
+  `PerformanceGroupPicker` (`onCheckout`) still fire in hosted mode to report
+  the moment; never book from those callbacks when the season or run is sold
+  through SeatLayer checkout.
 - Never call the server booking endpoint or import a SeatLayer server SDK from
   browser or mobile-bundle code.
 
@@ -67,9 +74,10 @@ inventory, payments, bookings, cancellations, or webhooks.
   `4xx` responses unchanged.
 - On `429` or `503`, wait for `Retry-After` (or `retryAfterSeconds`) before
   retrying. A `429` did nothing, so the retry is safe. Never retry in a tight loop.
-- The five server hold routes share one 600-per-minute budget per secret key.
-  Let buyers hold from the browser, which is counted per IP, and keep server
-  holds for phone, box office, and headless sales.
+- Holding, extending, releasing and booking seats from the server, and season
+  selling and renewals, are never refused for rate, so phone, box office and
+  headless sales can hold and book as fast as buyers arrive. Buyers still hold
+  from the browser in the normal web flow.
 - Log the `X-Request-ID` header or `requestId`, not the request credentials.
 - Live pages: `https://docs.seatlayer.io/server-api/errors/index.md` and
   `https://docs.seatlayer.io/server-api/rate-limits/index.md`.
