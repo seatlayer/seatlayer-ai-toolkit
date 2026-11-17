@@ -1,6 +1,6 @@
 ---
 name: integrate-seatlayer
-description: Add, review, diagnose, or verify SeatLayer integrations inside existing applications. Use for Hosted Ticketing (event setup, ticket limits, payment gateways, hosted checkout, embeds, Organizer Websites), Buyer SDK installation, SeatPicker or SeatingChart, 3D views, mobile SDKs, server SDKs, custom checkout, holds, booking, resale, Seasons and Performance Groups, private or partner sales, buyer access sessions, channels, workspaces, Embedded Designer, control room or SeatManager, webhooks, API errors and retries, migration from seats.io, analytics, checkout recovery, go-live review, and SeatLayer-related code generation or troubleshooting.
+description: Add, review, diagnose, or verify SeatLayer integrations inside existing applications. Use for Hosted Ticketing (event setup, ticket limits, payment gateways, hosted checkout, embeds, Organizer Websites, ticket sites, and SeatLayer-checkout events and orders by API), Buyer SDK installation, SeatPicker, SeatingChart or SeasonPicker, 3D views, mobile SDKs, server SDKs, custom checkout, holds, booking, resale, season tickets and Performance Groups, private or partner sales, buyer access sessions, channels, workspaces, Embedded Designer, control room or SeatManager, webhooks, API errors and retries, migration from seats.io, analytics, checkout recovery, go-live review, and SeatLayer-related code generation or troubleshooting.
 ---
 
 # Integrate SeatLayer
@@ -52,8 +52,10 @@ documentation and report the discrepancy.
 Choose the commerce profile first:
 
 - Managed ticketing when SeatLayer owns hosted checkout, Orders, tickets,
-  delivery, refunds, and Door. Use a Hosted Event Page, managed embed, or
-  Organizer Website. Do not add a host booking endpoint.
+  delivery, refunds, and Door. Use a Hosted Event Page, managed embed,
+  Organizer Website or ticket site, a `SeatPicker` with `checkout: 'hosted'`,
+  or events a server creates with `buyerCheckout: "seatlayer"`. Do not add a
+  host booking endpoint for these sales.
 - Platform/custom commerce when the host owns payment, orders, tickets,
   refunds, and fulfilment. Use `SeatPicker` for checkout handoff or
   `SeatingChart` for headless selection, then book from a trusted server.
@@ -69,7 +71,9 @@ Then add only the required surface:
 - Embedded Designer for organizer chart editing.
 - `SeatManager` for an embedded operator board.
 - Resale endpoints only for Platform events where the host issues tickets.
-- Season or Performance Group APIs only when one purchase spans several dates.
+- `SeasonPicker` and the season API, or Performance Groups, only when one
+  purchase spans several dates. They are web and server products: the mobile
+  SDKs sell one Event at a time.
 - Workspaces and server APIs for multi-tenant platforms.
 - The SeatLayer MCP only for authorized chart or event work, never for
   application code.

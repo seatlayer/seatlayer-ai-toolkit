@@ -35,10 +35,13 @@ Benchmarked on public 100,000-, 150,000- and 200,000-seat venue fixtures on 15 S
 |---|---|---|
 | Share a complete booking page | Hosted Event Page | SeatLayer managed ticketing |
 | Put managed checkout in an existing site | Managed embed | SeatLayer managed ticketing |
-| Publish one or many events as a site | Organizer Website | SeatLayer managed ticketing |
+| Publish one or many events as a site | Organizer Website or ticket site | SeatLayer managed ticketing |
+| Sell from your own page with no backend | `SeatPicker` with `checkout: 'hosted'` | SeatLayer managed ticketing |
+| Create and sell SeatLayer-checkout events from your server | Events API with `buyerCheckout: "seatlayer"` | SeatLayer managed ticketing |
 | Add seating to an existing checkout | `SeatPicker` or `SeatingChart` | Your platform |
+| Sell season tickets | SeatLayer season pages, or `SeasonPicker` with the season API | SeatLayer checkout or your platform |
 | Sell a private, partner, sponsor, or presale allocation | Hosted access link or buyer access session | Depends on the selected product profile |
-| Build a mobile buyer experience | React Native, Flutter, iOS, or Android SDK | Your platform |
+| Build a mobile buyer experience for single events | React Native, Flutter, iOS, or Android SDK | Your platform |
 | Add organizer chart or event operations | Embedded Designer or control room | Your platform |
 
 Read [Choose an integration](https://docs.seatlayer.io/start/choose-an-integration/)

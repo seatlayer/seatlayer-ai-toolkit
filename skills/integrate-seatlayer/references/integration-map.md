@@ -10,6 +10,8 @@ listed live Markdown pages plus any exact reference page discovered through
 |---|---|
 | Product model | `https://docs.seatlayer.io/start/overview/index.md` |
 | Integration selection | `https://docs.seatlayer.io/start/choose-an-integration/index.md` |
+| One Event, a run of performances, or a renewable Season | `https://docs.seatlayer.io/start/inventory-models/index.md` |
+| Which SDK or API for the host stack | `https://docs.seatlayer.io/sdks/index.md` |
 | First complete loop | `https://docs.seatlayer.io/start/quickstart/index.md` |
 | Authentication and environments | `https://docs.seatlayer.io/start/authentication/index.md` |
 | Production launch | `https://docs.seatlayer.io/start/going-live/index.md` |
@@ -24,10 +26,16 @@ listed live Markdown pages plus any exact reference page discovered through
 | Connect one of the 14 payment gateways | Payments | `https://docs.seatlayer.io/sell/connect-payments/index.md` |
 | Buyer checkout journey and return page | Hosted checkout | `https://docs.seatlayer.io/sell/hosted-checkout/index.md` |
 | Refunds and cancellations | Managed ticketing | `https://docs.seatlayer.io/sell/refunds-and-cancellations/index.md` |
-| Counter sales and door scanning | Box office and Door | `https://docs.seatlayer.io/sell/box-office/index.md`, `https://docs.seatlayer.io/sell/door-check-in/index.md` |
+| Counter sales and door scanning | Box office and Door | `https://docs.seatlayer.io/sell/box-office/index.md`, `https://docs.seatlayer.io/sell/door-check-in/index.md`, `https://docs.seatlayer.io/sell/staff-roles/index.md` |
 | Share one complete buyer destination | Hosted Event Page | `https://docs.seatlayer.io/start/choose-an-integration/index.md` |
 | Put managed checkout in an existing site | Managed embed | `https://docs.seatlayer.io/integrations/iframe/index.md` |
+| Sell from the host's own page with SeatLayer checkout and no backend | `SeatPicker` with `checkout: 'hosted'` | `https://docs.seatlayer.io/integrations/iframe/index.md` |
+| Paste one tag to sell a date, a run of dates or a short pass | What's on widget | `https://docs.seatlayer.io/buyer-sdk/whats-on/index.md` |
 | Publish an organizer site | Organizer Website | `https://docs.seatlayer.io/start/choose-an-integration/index.md` |
+| Event pages in the organizer's brand, on a SeatLayer address or their own domain | Ticket site | `https://docs.seatlayer.io/sell/ticket-site/index.md` |
+| Create SeatLayer-checkout or free events from a server, assign the gateway, go live, booking fee and discount codes | Managed ticketing by API | `https://docs.seatlayer.io/server-api/event-checkout/index.md` |
+| Read SeatLayer orders; refund, cancel or resend an event order from a server | Orders API | `https://docs.seatlayer.io/server-api/orders/index.md` |
+| Sell and run a season from the dashboard and SeatLayer pages | Seasons | `https://docs.seatlayer.io/sell/seasons/index.md`, `https://docs.seatlayer.io/sell/season-seats/index.md` |
 | Host owns commerce and fulfilment | Platform/SDK | `https://docs.seatlayer.io/integrations/platforms/index.md` |
 | Private, partner, sponsor, or presale inventory | Sales channel | `https://docs.seatlayer.io/integrations/private-and-partner-sales/index.md` |
 | Existing site on WordPress | WordPress plugin | `https://docs.seatlayer.io/integrations/wordpress/index.md` |
@@ -43,12 +51,21 @@ For managed ticketing, do not add a host booking endpoint. For Platform/SDK,
 the host owns checkout and books from its backend. Publishing a hosted page,
 listing an event on a Website, and opening sales are separate explicit actions.
 
+A `SeatPicker` with `checkout: 'hosted'` takes the payment through SeatLayer
+checkout. When the event cannot take it there (no hosted checkout, or no
+gateway assigned), the picker falls back to the `onCheckout` handoff for that
+buyer and reports why through `onCheckoutUnavailable`; a host that keeps that
+fallback still needs its trusted booking route. An event created with a secret
+key is Platform inventory unless the create sends `buyerCheckout: "seatlayer"`
+or `bookingMode: "free"`, and the checkout owner is fixed once chosen.
+
 ## Buyer integration
 
 | Host need | Surface | Live documentation |
 |---|---|---|
 | Complete selection and checkout handoff | `SeatPicker` | `https://docs.seatlayer.io/buyer-sdk/seat-picker/index.md` |
 | Custom cart and selection controls | `SeatingChart` | `https://docs.seatlayer.io/buyer-sdk/seating-chart/index.md` |
+| JavaScript, React, Vue or Angular | Web SDKs | `https://docs.seatlayer.io/buyer-sdk/web/index.md` |
 | Package selection and installation | Buyer SDK | `https://docs.seatlayer.io/buyer-sdk/install/index.md` |
 | Holds and checkout | Buyer SDK | `https://docs.seatlayer.io/buyer-sdk/holds-and-checkout/index.md` |
 | Hold expiry recovery | Buyer SDK | `https://docs.seatlayer.io/buyer-sdk/hold-expiry/index.md` |
@@ -57,8 +74,19 @@ listing an event on a Website, and opening sales are separate explicit actions.
 | Compare the native app SDKs | Mobile SDKs | `https://docs.seatlayer.io/buyer-sdk/mobile/index.md` |
 | 3D buyer view and seat views | Buyer SDK | `https://docs.seatlayer.io/buyer-sdk/3d-view/index.md` |
 | Add 3D to an existing website, step by step | Buyer SDK | `https://docs.seatlayer.io/buyer-sdk/add-3d-seat-view/index.md` |
-| Buyer picks a Season or a run of performances | Buyer SDK | `https://docs.seatlayer.io/buyer-sdk/seasons/index.md`, `https://docs.seatlayer.io/buyer-sdk/performance-groups/index.md` |
+| Buyer picks a Season or a run of performances | `SeasonPicker` (JavaScript, React, Vue, Angular) or `PerformanceGroupPicker` (JavaScript) | `https://docs.seatlayer.io/buyer-sdk/seasons/index.md`, `https://docs.seatlayer.io/buyer-sdk/performance-groups/index.md` |
 | Journey analytics | Buyer SDK callbacks | `https://docs.seatlayer.io/buyer-sdk/analytics/index.md` |
+
+3D is offered for venues up to 30,000 seats on phones and 60,000 on desktop by
+default; set `max3DSeats` to change it.
+
+`SeatPicker` holds the buyer's seats when they go to checkout (or when the host
+calls `holdSelection()`), then passes the `holdId` to `onCheckout`. With
+`SeatingChart`, the host's own code calls `hold()`. `SeatPicker`,
+`SeasonPicker` and `PerformanceGroupPicker` each take
+`checkout: 'handoff' | 'hosted'`. Vue and Angular wrap `SeatingChart` and
+`SeasonPicker` as components and re-export the complete picker as
+`SeatPickerWidget`; `SeatManager` is under each package's `/manager` entry.
 
 ## Mobile SDK selection
 
@@ -66,13 +94,14 @@ listing an event on a Website, and opening sales are separate explicit actions.
 |---|---|---|
 | Expo or React Native | `@seatlayer/react-native` (npm) | `https://docs.seatlayer.io/buyer-sdk/react-native/index.md` |
 | Flutter | `seatlayer` (pub.dev) | `https://docs.seatlayer.io/buyer-sdk/flutter/index.md` |
-| Native iOS | `seatlayer-ios` Swift package | `https://docs.seatlayer.io/buyer-sdk/ios/index.md` |
+| Native iOS | `SeatLayer` library from the `seatlayer-ios` Swift package | `https://docs.seatlayer.io/buyer-sdk/ios/index.md` |
 | Native Android | `io.seatlayer:seatlayer-android` and `io.seatlayer:seatlayer-android-compose` (Maven Central) | `https://docs.seatlayer.io/buyer-sdk/android/index.md` |
 
 Each native SDK has its own version. Read the current one from the registry or
 `https://docs.seatlayer.io/sdk-catalog.json`; do not copy a version from this
-file. A native picker takes one published Event; Seasons and Performance Groups
-are browser, API and server products.
+file. A native picker takes one published Event. Season tickets and
+Performance Groups are sold with the web SDK and the server SDKs, not in any
+mobile SDK.
 
 ## Server and checkout
 
@@ -88,13 +117,18 @@ are browser, API and server products.
 | Inventory control and resale (`put-up-for-resale`, `remove-from-resale`) | `https://docs.seatlayer.io/server-api/inventory/index.md` |
 | Event hosting region | `https://docs.seatlayer.io/server-api/event-regions/index.md` |
 | Fixed Renewable Seasons, including Season Best Available | `https://docs.seatlayer.io/server-api/seasons/index.md` |
-| Performance Groups (runs of two to eight dates) | `https://docs.seatlayer.io/server-api/performance-groups/index.md` |
+| A season end to end: checkout choice, renewals, and the year from the host server | `https://docs.seatlayer.io/integrations/seasons/index.md` |
+| Season holders and their customers, seats and tickets | `https://docs.seatlayer.io/server-api/holders/index.md` |
+| Performance Groups (runs of two to twelve dates) | `https://docs.seatlayer.io/server-api/performance-groups/index.md` |
+| Event and single-seat prices from the host server | `https://docs.seatlayer.io/server-api/prices/index.md` |
+| Several dates from one floor plan or one set-up event | `https://docs.seatlayer.io/server-api/event-series/index.md` |
 | Blocking and release | `https://docs.seatlayer.io/server-api/blocking/index.md` |
 | Cancellations and box office | `https://docs.seatlayer.io/server-api/cancellations-and-box-office/index.md` |
 | Reports and audit history | `https://docs.seatlayer.io/server-api/reports/index.md` |
 
 Prefer the official server SDK for the host language, then use raw HTTP only
-for an operation the current SDK does not expose.
+for an operation the current SDK does not expose. All seven server SDKs cover
+the season operations.
 
 | Need | Live documentation |
 |---|---|
@@ -146,6 +180,8 @@ accept channel scope from browser input; scope comes from the credential.
 |---|---|
 | Agent implementation workflow | `https://docs.seatlayer.io/agents/integrate-seatlayer/index.md` |
 | Agent context and prompt | `https://docs.seatlayer.io/agents/overview/index.md` |
-| Chart-authoring agent | `https://docs.seatlayer.io/agents/designer-mcp/index.md` |
+| SeatLayer MCP: charts and events | `https://docs.seatlayer.io/agents/designer-mcp/index.md` |
+| Connect Claude, Codex or ChatGPT to the SeatLayer MCP | `https://docs.seatlayer.io/agents/connect-claude/index.md`, `https://docs.seatlayer.io/agents/connect-codex/index.md`, `https://docs.seatlayer.io/agents/connect-chatgpt/index.md` |
+| A first chart from a description, with or without a connection | `https://docs.seatlayer.io/start/first-chart-with-ai/index.md` |
 | What each agent surface can do | `https://docs.seatlayer.io/agents/capabilities/index.md` |
 | Turn a floor plan image or PDF into a chart (Click the plan) | `https://docs.seatlayer.io/designer/reference-plan-import/index.md` |
