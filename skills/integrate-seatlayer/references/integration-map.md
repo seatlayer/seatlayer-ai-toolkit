@@ -33,11 +33,11 @@ listed live Markdown pages plus any exact reference page discovered through
 | Existing site on WordPress | WordPress plugin | `https://docs.seatlayer.io/integrations/wordpress/index.md` |
 | Moving from seats.io | Migration | `https://docs.seatlayer.io/integrations/migrate-from-seatsio/index.md` |
 
-Hosted Ticketing supports 14 gateways: Stripe, PayPal, Square, Braintree,
-Authorize.Net, Checkout.com, Mollie, Razorpay, Tap, Mercado Pago, Xendit,
-Flutterwave, Paystack and iyzico. Stripe and Razorpay are open to every account;
-the others are switched on per account on request. Ticket limits (`maxTicketsPerOrder`,
-`maxTicketsPerBuyer`) are event settings, not checkout code.
+Hosted Ticketing supports 14 payment gateways: Stripe, PayPal, Square,
+Braintree, Authorize.Net, Checkout.com, Mollie, Razorpay, Tap, Mercado Pago,
+Xendit, Flutterwave, Paystack and iyzico. Buyers pay into the organizer's own
+account. Ticket limits (`maxTicketsPerOrder`, `maxTicketsPerBuyer`) are event
+settings, not checkout code.
 
 For managed ticketing, do not add a host booking endpoint. For Platform/SDK,
 the host owns checkout and books from its backend. Publishing a hosted page,
@@ -83,7 +83,7 @@ are browser, API and server products.
 | Book a hold | `https://docs.seatlayer.io/server-api/booking/index.md` |
 | Idempotency and conflicts | `https://docs.seatlayer.io/server-api/idempotency-and-conflicts/index.md` |
 | Error body and every error code | `https://docs.seatlayer.io/server-api/errors/index.md` |
-| Rate limits, `429` and `Retry-After` | `https://docs.seatlayer.io/server-api/rate-limits/index.md` |
+| Retries, `429` and `Retry-After` | `https://docs.seatlayer.io/server-api/rate-limits/index.md` |
 | Event lifecycle | `https://docs.seatlayer.io/server-api/events/index.md` |
 | Inventory control and resale (`put-up-for-resale`, `remove-from-resale`) | `https://docs.seatlayer.io/server-api/inventory/index.md` |
 | Event hosting region | `https://docs.seatlayer.io/server-api/event-regions/index.md` |
@@ -133,7 +133,7 @@ accept channel scope from browser input; scope comes from the credential.
 |---|---|
 | Production practices | `https://docs.seatlayer.io/integrations/best-practices/index.md` |
 | Webhook subscriptions | `https://docs.seatlayer.io/webhooks/manage-subscriptions/index.md` |
-| Event catalog (40 public events) | `https://docs.seatlayer.io/webhooks/events/index.md` |
+| Event catalog (every public event name) | `https://docs.seatlayer.io/webhooks/events/index.md` |
 | Signature verification | `https://docs.seatlayer.io/webhooks/signatures/index.md` |
 | Delivery and retries | `https://docs.seatlayer.io/webhooks/delivery-and-retries/index.md` |
 | Buyer branding | `https://docs.seatlayer.io/customization/buyer-experience/index.md` |

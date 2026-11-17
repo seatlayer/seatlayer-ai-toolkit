@@ -26,7 +26,7 @@ confirm no server credential or server-only module is present.
 | Hosted default | Booking remains usable without optional Event Page design |
 | Payment and return | Test payment creates one Order and returns to the branded success path |
 | Failure/cancel | Buyer can return or retry without a duplicate Order or stale hold |
-| Cold/mobile load | Useful loading state and complete picker at mobile and desktop widths |
+| First load and mobile | Useful loading state and complete picker at mobile and desktop widths |
 
 Do not require or create a host booking endpoint for this profile.
 

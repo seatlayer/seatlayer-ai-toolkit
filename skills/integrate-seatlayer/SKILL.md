@@ -1,6 +1,6 @@
 ---
 name: integrate-seatlayer
-description: Add, review, diagnose, or verify SeatLayer integrations inside existing applications. Use for Hosted Ticketing (event setup, ticket limits, payment gateways, hosted checkout, embeds, Organizer Websites), Buyer SDK installation, SeatPicker or SeatingChart, 3D views, mobile SDKs, server SDKs, custom checkout, holds, booking, resale, Seasons and Performance Groups, private or partner sales, buyer access sessions, channels, workspaces, Embedded Designer, control room or SeatManager, webhooks, API errors and rate limits, migration from seats.io, analytics, checkout recovery, go-live review, and SeatLayer-related code generation or troubleshooting.
+description: Add, review, diagnose, or verify SeatLayer integrations inside existing applications. Use for Hosted Ticketing (event setup, ticket limits, payment gateways, hosted checkout, embeds, Organizer Websites), Buyer SDK installation, SeatPicker or SeatingChart, 3D views, mobile SDKs, server SDKs, custom checkout, holds, booking, resale, Seasons and Performance Groups, private or partner sales, buyer access sessions, channels, workspaces, Embedded Designer, control room or SeatManager, webhooks, API errors and retries, migration from seats.io, analytics, checkout recovery, go-live review, and SeatLayer-related code generation or troubleshooting.
 ---
 
 # Integrate SeatLayer

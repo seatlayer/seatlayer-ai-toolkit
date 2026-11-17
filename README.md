@@ -114,9 +114,9 @@ SeatLayer MCP, and buyer WebMCP tools are separate interfaces.
 - `integrate-seatlayer`: a portable Agent Skill for implementation, review,
   troubleshooting, and go-live work. Its references route an agent to the live
   pages for event setup and ticket limits, the 14 payment gateways, 3D views,
-  resale, Seasons and Season Best Available, API errors and rate limits, the 40
-  webhook events, SeatManager hover prices, Click the plan, and migration from
-  seats.io.
+  resale, Seasons and Season Best Available, API errors and retries, webhooks
+  and their events, SeatManager hover prices, Click the plan, and migration
+  from seats.io.
 - `seatlayer-venue-spec`: an Agent Skill that turns a description of a venue
   ("12 rows of 18, front two VIP, bar at the back") into a Venue Spec and
   builds the chart through the SeatLayer MCP, or hands the user a file to paste
@@ -253,7 +253,8 @@ environment-variable values, and ignores dependencies and build output.
 - Inventory conflicts and expired holds are normal recovery paths.
 - Buyer access tokens are event- and origin-bound capabilities. Keep them in
   memory, never in storage, URLs, logs, analytics, or exception text.
-- A private event is token-gated and has **no public link**; it is not hard-off.
+- A private event is token-gated and has **no public link**, but it is still on
+  sale to buyers who hold a valid token.
 - Listing an event on an Organizer Website makes it discoverable on that public
   Website and must be an explicit organizer decision.
 - Webhook signatures are verified from the raw request body.

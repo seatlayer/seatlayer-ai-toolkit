@@ -59,7 +59,7 @@ inventory, payments, bookings, cancellations, or webhooks.
 - Define what happens when payment succeeds but booking cannot complete:
   automatic void/refund, durable retry, or operator recovery.
 
-## Errors and rate limits
+## Errors and retries
 
 - Branch on the stable `error` field (and `code` when present), never on
   `message`. Treat unknown extra fields as detail, not a different error.
@@ -100,9 +100,9 @@ inventory, payments, bookings, cancellations, or webhooks.
 ## Webhooks
 
 - Verify signatures using the exact raw request body.
-- Handle the event name as a string with a default branch. There are 40 public
-  event names; the `0.8.0` server SDKs type 30 of them, and the rest (resale,
-  Season dates, performances, Season orders) arrive with the same envelope.
+- Handle the event name as a string with a default branch. New event names are
+  added over time, and an SDK version may not type every name the API sends;
+  each arrives with the same envelope. The live catalog lists them all.
 - Deduplicate by the documented occurrence identity.
 - Acknowledge delivery quickly and move slow work to a durable queue when the
   host architecture supports it.
