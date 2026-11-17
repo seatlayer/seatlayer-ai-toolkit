@@ -9,8 +9,10 @@ When product behavior changes:
 1. Update the public documentation first.
 2. Update only the toolkit routes or invariants affected by that change.
 3. Add a focused doctor fixture for every new deterministic diagnostic.
-4. Run `npm run validate`.
-5. Run the doctor against a real integration before release.
+4. When a SeatLayer package releases, update `CHECKED_RELEASES` in
+   `skills/integrate-seatlayer/scripts/doctor.mjs` and its fixture.
+5. Run `npm run validate`.
+6. Run the doctor against a real integration before release.
 
 Keep the toolkit dependency-free unless a dependency is essential. Commands
 must be safe by default, diagnostics must be read-only, and the SeatLayer MCP
