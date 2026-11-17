@@ -125,10 +125,14 @@ SeatLayer MCP, and buyer WebMCP tools are separate interfaces.
   builds the chart through the SeatLayer MCP, or hands the user a file to paste
   into the Designer. Worked examples for a theatre, wedding, club, arena, expo
   and comedy club are in `examples.md`.
-- `seatlayer-ai doctor`: deterministic checks for exposed credentials,
-  server packages in client code, browser-side booking, unsafe buyer-access
-  token handling, missing idempotency and conflict handling, unaudited channel
-  overrides, and weak webhook verification.
+- `seatlayer-ai doctor`: deterministic checks for exposed credentials
+  (including a secret key named with a public prefix such as `NEXT_PUBLIC_`,
+  and secret keys in Flutter, iOS and Android app code), server packages in
+  client code, browser-side booking, unsafe buyer-access token handling,
+  missing idempotency and conflict handling on raw HTTP and server SDK
+  bookings, unaudited channel overrides, and weak webhook verification. It also notes options that do nothing in
+  `@seatlayer/js` 0.112.0 and packages older than the release it was checked
+  against.
 - Claude Code commands for setup, integration, diagnosis, verification, and
   `/seatlayer:chart` to build a chart from a description.
 - Codex and Claude plugin manifests.

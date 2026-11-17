@@ -5,7 +5,9 @@ import { resolve, relative, extname, basename } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const IGNORED_DIRECTORIES = new Set([
+  ".dart_tool",
   ".git",
+  ".gradle",
   ".next",
   ".nuxt",
   ".output",
@@ -17,6 +19,8 @@ const IGNORED_DIRECTORIES = new Set([
   "dist",
   "node_modules",
   "out",
+  "Pods",
+  "DerivedData",
   "target",
   "vendor",
 ]);
@@ -24,6 +28,7 @@ const IGNORED_DIRECTORIES = new Set([
 const TEXT_EXTENSIONS = new Set([
   ".cjs",
   ".cs",
+  ".dart",
   ".env",
   ".go",
   ".html",
@@ -31,6 +36,8 @@ const TEXT_EXTENSIONS = new Set([
   ".js",
   ".json",
   ".jsx",
+  ".kt",
+  ".kts",
   ".md",
   ".mjs",
   ".php",
@@ -38,6 +45,7 @@ const TEXT_EXTENSIONS = new Set([
   ".rb",
   ".rs",
   ".svelte",
+  ".swift",
   ".toml",
   ".ts",
   ".tsx",
@@ -49,21 +57,85 @@ const TEXT_EXTENSIONS = new Set([
 const CODE_EXTENSIONS = new Set([
   ".cjs",
   ".cs",
+  ".dart",
   ".go",
   ".html",
   ".java",
   ".js",
   ".jsx",
+  ".kt",
+  ".kts",
   ".mjs",
   ".php",
   ".py",
   ".rb",
   ".rs",
   ".svelte",
+  ".swift",
   ".ts",
   ".tsx",
   ".vue",
 ]);
+
+/** Flutter and iOS app code ships to the buyer's device. */
+const MOBILE_APP_EXTENSIONS = new Set([".dart", ".swift"]);
+
+const JAVASCRIPT_EXTENSIONS = new Set([
+  ".cjs",
+  ".js",
+  ".jsx",
+  ".mjs",
+  ".svelte",
+  ".ts",
+  ".tsx",
+  ".vue",
+]);
+
+/** Languages whose server SDK takes bookingRef as a required positional argument. */
+const POSITIONAL_BOOKING_REF_EXTENSIONS = new Set([".cs", ".java", ".kt", ".kts"]);
+
+/**
+ * The latest release of each package when this toolkit was last checked
+ * (17 November 2026). An older declared version is reported as info only.
+ */
+export const CHECKED_RELEASES = {
+  "@seatlayer/angular": "0.112.0",
+  "@seatlayer/core": "0.112.0",
+  "@seatlayer/js": "0.112.0",
+  "@seatlayer/react": "0.112.0",
+  "@seatlayer/react-native": "0.4.0",
+  "@seatlayer/server": "0.9.0",
+  "@seatlayer/vue": "0.112.0",
+  seatlayer: "0.12.0",
+};
+
+/** Web packages published together; each depends on the others at its own version. */
+const WEB_PACKAGES = [
+  "@seatlayer/angular",
+  "@seatlayer/core",
+  "@seatlayer/js",
+  "@seatlayer/react",
+  "@seatlayer/vue",
+];
+
+/** Options that do nothing or are retired in @seatlayer/js 0.112.0 and @seatlayer/server 0.9.0. */
+const DEPRECATED_JAVASCRIPT_APIS = [
+  {
+    pattern: /\b(?:hideBadge|showAttribution|hide-badge|show-attribution)\b/g,
+    message: "hideBadge and showAttribution have no effect: SeatLayer draws no badge for buyers.",
+    remediation: "Remove the option.",
+  },
+  {
+    pattern: /(?:initialView\s*[:=]\s*|setViewMode\(\s*)["'](?:isometric|perspective)["']/g,
+    message: "The isometric and perspective views are retired and will be removed in the next major version.",
+    remediation: "Use 'flat', and the 3D venue view (setBuyerView('venue3d')) for 3D.",
+  },
+  {
+    pattern: /\.boxOfficeBook\s*\(/g,
+    message: "boxOfficeBook is deprecated in @seatlayer/server.",
+    remediation: "Use inventory.book({ labels, bookingRef }).",
+  },
+];
 
 const SEVERITY_ORDER = {
   critical: 0,
@@ -106,6 +178,7 @@ function isLikelyClientFile(relativePath, content) {
   if (isLikelyServerFile(relativePath)) return false;
 
   const path = `/${normalizePath(relativePath).toLowerCase()}`;
+  if (MOBILE_APP_EXTENSIONS.has(extname(path))) return true;
   if (/^[\s;]*["']use client["'];?/m.test(content)) return true;
 
   return [
@@ -164,6 +237,92 @@ function addFinding(findings, finding) {
       item.line === finding.line,
   );
   if (!duplicate) findings.push(finding);
+}
+
+const PUBLIC_SECRET_PATTERN =
+  /\b(?:NEXT_PUBLIC_|NUXT_PUBLIC_|EXPO_PUBLIC_|VITE_|REACT_APP_|VUE_APP_|GATSBY_|PUBLIC_)SEATLAYER_SECRET_KEY\b/g;
+
+const CONFIG_EXTENSIONS = new Set([".json", ".toml", ".yaml", ".yml"]);
+
+/** A booking call through an official server SDK (Node, Python, PHP, Java, Go, Ruby, .NET). */
+const SDK_BOOKING_PATTERN =
+  /\b[Ii]nventory(?:\(\))?\s*(?:\.|->)\s*(?:book(?:BestAvailable|_best_available)?|Book(?:BestAvailable)?(?:Async)?)\s*\(/g;
+
+function minimumVersion(range) {
+  if (typeof range !== "string") return null;
+  const match = /^\s*(?:[\^~]|>=?|=)?\s*v?(\d+)\.(\d+)\.(\d+)/.exec(range);
+  return match ? match.slice(1, 4).map(Number) : null;
+}
+
+function compareVersions(a, b) {
+  for (let index = 0; index < 3; index += 1) {
+    if (a[index] !== b[index]) return a[index] - b[index];
+  }
+  return 0;
+}
+
+function olderReleaseFinding(name, range, path, line) {
+  return {
+    code: "SL302",
+    severity: "info",
+    path,
+    line,
+    message: `${name} ${range.trim()} is older than ${CHECKED_RELEASES[name]}, the latest release when this toolkit was last checked.`,
+    remediation:
+      "Read the registry for the current release and its changelog, then upgrade and rerun the integration's checks.",
+  };
+}
+
+function checkPackageManifest(content, relativePath, findings) {
+  let manifest;
+  try {
+    manifest = JSON.parse(content);
+  } catch {
+    return;
+  }
+  const declared = new Map();
+  for (const field of ["dependencies", "devDependencies"]) {
+    const dependencies = manifest?.[field];
+    if (!dependencies || typeof dependencies !== "object") continue;
+    for (const [name, range] of Object.entries(dependencies)) {
+      if (!name.startsWith("@seatlayer/") || !(name in CHECKED_RELEASES)) continue;
+      const version = minimumVersion(range);
+      if (!version) continue;
+      declared.set(name, version);
+      if (compareVersions(version, minimumVersion(CHECKED_RELEASES[name])) < 0) {
+        addFinding(
+          findings,
+          olderReleaseFinding(name, range, relativePath, lineForIndex(content, content.indexOf(`"${name}"`))),
+        );
+      }
+    }
+  }
+
+  const web = WEB_PACKAGES.filter((name) => declared.has(name));
+  const versions = new Set(web.map((name) => declared.get(name).join(".")));
+  if (versions.size > 1) {
+    addFinding(findings, {
+      code: "SL303",
+      severity: "info",
+      path: relativePath,
+      line: lineForIndex(content, content.indexOf(`"${web[0]}"`)),
+      message: `SeatLayer web packages are declared at different versions (${[...versions].join(", ")}).`,
+      remediation:
+        "Use one version for @seatlayer/js, core, react, vue and angular: each depends on the others at its own exact version, so mixed versions install two copies.",
+    });
+  }
+}
+
+function checkPubspec(content, relativePath, findings) {
+  const match = /^[ \t]+seatlayer:[ \t]*["']?(\^?\d+\.\d+\.\d+)/m.exec(content);
+  if (!match) return;
+  const version = minimumVersion(match[1]);
+  if (version && compareVersions(version, minimumVersion(CHECKED_RELEASES.seatlayer)) < 0) {
+    addFinding(
+      findings,
+      olderReleaseFinding("seatlayer", match[1], relativePath, lineForIndex(content, match.index)),
+    );
+  }
 }
 
 export async function scanRepository(target = ".") {
@@ -233,12 +392,35 @@ export async function scanRepository(target = ".") {
       });
     }
 
+    const isEnvFile = basename(file) === ".env" || basename(file).startsWith(".env.");
+    const publicSecret =
+      (isEnvFile || isCode || CONFIG_EXTENSIONS.has(extension)) && !isTestFile(relativePath)
+        ? firstMatch(content, PUBLIC_SECRET_PATTERN)
+        : null;
+    if (publicSecret) {
+      addFinding(findings, {
+        code: "SL006",
+        severity: "critical",
+        path: relativePath,
+        line: lineForIndex(content, publicSecret.index),
+        message:
+          "The SeatLayer secret key is named with a public prefix, so the build puts it in buyer-facing code.",
+        remediation:
+          "Revoke the key, rename the variable to SEATLAYER_SECRET_KEY, and read it only on the trusted server.",
+      });
+    }
+
+    if (!isTestFile(relativePath)) {
+      if (basename(file) === "package.json") checkPackageManifest(content, relativePath, findings);
+      if (basename(file) === "pubspec.yaml") checkPubspec(content, relativePath, findings);
+    }
+
     if (!isCode || !mentionsSeatLayer) continue;
 
     const likelyClient = isLikelyClientFile(relativePath, content);
     const serverSdkImport = firstMatch(
       content,
-      /(?:from\s*["']@seatlayer\/server["']|require\s*\(\s*["']@seatlayer\/server["']\s*\))/g,
+      /(?:from\s*["']@seatlayer\/server["']|(?:require|import)\s*\(\s*["']@seatlayer\/server["']\s*\))/g,
     );
     if (likelyClient && serverSdkImport) {
       addFinding(findings, {
@@ -289,7 +471,7 @@ export async function scanRepository(target = ".") {
     }
     const secretReference = firstMatch(
       content,
-      /(?:process\.env\.|import\.meta\.env\.|env\s*\[\s*["']|getenv\(\s*["']|System\.getenv\(\s*["']|Environment\.GetEnvironmentVariable\(\s*["']|os\.environ\[\s*["']|ENV\.fetch\(\s*["'])SEATLAYER_SECRET_KEY\b/g,
+      /(?:process\.env\.|import\.meta\.env\.|env\s*\[\s*["']|getenv\(\s*["']|System\.getenv\(\s*["']|Environment\.GetEnvironmentVariable\(\s*["']|os\.environ\[\s*["']|ENV\.fetch\(\s*["']|BuildConfig\.|String\.fromEnvironment\(\s*["']|ProcessInfo\.processInfo\.environment\[\s*["']|forInfoDictionaryKey:\s*["']|infoDictionary\??\s*\[\s*["'])SEATLAYER_SECRET_KEY\b/g,
     );
     if (likelyClient && secretReference) {
       addFinding(findings, {
@@ -304,10 +486,11 @@ export async function scanRepository(target = ".") {
       });
     }
 
-    const bookingCall = firstMatch(
+    const rawBookingCall = firstMatch(
       content,
       /(?:fetch|request|req|apiClient|httpClient|axios(?:\.\w+)?)\s*\(\s*[`'"][^`'"]*\/v1\/events\/[^`'"]+\/book/g,
     );
+    const bookingCall = rawBookingCall ?? firstMatch(content, SDK_BOOKING_PATTERN);
     if (bookingCall && likelyClient) {
       addFinding(findings, {
         code: "SL003",
@@ -322,7 +505,10 @@ export async function scanRepository(target = ".") {
 
     if (bookingCall && !likelyClient && !isTestFile(relativePath)) {
       serverBookingDetected = true;
-      if (!/\bbookingRef\b/.test(content)) {
+      const bookingRefVisible = /\b(?:bookingRef|booking_ref|BookingRef)\b/.test(content);
+      const bookingRefPositional =
+        !rawBookingCall && POSITIONAL_BOOKING_REF_EXTENSIONS.has(extension);
+      if (!bookingRefVisible && !bookingRefPositional) {
         addFinding(findings, {
           code: "SL101",
           severity: "warning",
@@ -391,7 +577,7 @@ export async function scanRepository(target = ".") {
       !isTestFile(relativePath);
     if (
       webhookContext &&
-      !/(?:timingSafeEqual|createHmac|verify.{0,40}signature|signature.{0,40}verify)/is.test(
+      !/(?:timingSafeEqual|createHmac|verifyWebhook|verify_webhook|Webhook(?:::|\.)[Vv]erify\s*\(|verify.{0,40}signature|signature.{0,40}verify)/is.test(
         content,
       )
     ) {
@@ -404,6 +590,21 @@ export async function scanRepository(target = ".") {
         remediation:
           "Verify the documented signature against the exact raw request body before mutating business state.",
       });
+    }
+
+    if (JAVASCRIPT_EXTENSIONS.has(extension) && !isTestFile(relativePath)) {
+      for (const deprecated of DEPRECATED_JAVASCRIPT_APIS) {
+        const match = firstMatch(content, deprecated.pattern);
+        if (!match) continue;
+        addFinding(findings, {
+          code: "SL301",
+          severity: "info",
+          path: relativePath,
+          line: lineForIndex(content, match.index),
+          message: deprecated.message,
+          remediation: deprecated.remediation,
+        });
+      }
     }
   }
 
