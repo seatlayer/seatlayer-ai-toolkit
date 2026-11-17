@@ -143,6 +143,34 @@ SeatLayer MCP, and buyer WebMCP tools are separate interfaces.
   context when an edit touches SeatLayer code. It never blocks or approves an
   edit.
 
+## Frequently asked questions
+
+### Can an AI agent build a seating chart?
+
+Yes. Describe the venue in plain words, such as "12 rows of 18, front two VIP,
+bar at the back", and the `seatlayer-venue-spec` skill turns it into a Venue
+Spec that SeatLayer checks before it builds the chart, through the SeatLayer
+MCP or by pasting the file into the Designer. It works with Claude, ChatGPT,
+Codex, Claude Code or any MCP client, and every seat in the result stays
+editable. The chart goes on sale only after a person approves it.
+
+### Can a coding agent add a seat map and checkout to my app?
+
+Yes. The `integrate-seatlayer` skill has the agent read your repository, choose
+between SeatLayer's hosted checkout and your own checkout, load only the docs
+pages it needs, add the seat map and, when you keep your own checkout, the
+server step that books the hold, and prove the result. It works in Claude Code,
+Codex, GitHub Copilot or any agent that reads a skill file.
+`seatlayer-ai doctor` then checks the code for exposed keys, browser-side
+booking and missing idempotency.
+
+### Does the AI publish changes on its own?
+
+No. Every chart change is a draft you can review or undo, and a chart is
+published only after you approve its review. A change to an event on sale
+waits for your yes, the agent never sells a seat to a buyer, and a refund it
+asks for waits for an admin.
+
 ## Quick start
 
 Clone the repository:
