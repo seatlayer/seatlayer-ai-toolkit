@@ -1,6 +1,6 @@
 # SeatLayer Venue Spec examples
 
-Six worked Venue Specs. Each one is built and checked in SeatLayer's tests. The same files are published by name, for example `https://docs.seatlayer.io/schemas/venue-spec-examples/theatre.json`.
+Seven worked Venue Specs. Each one is built and checked in SeatLayer's tests. The same files are published by name, for example `https://docs.seatlayer.io/schemas/venue-spec-examples/theatre.json`.
 
 ## Theatre, 400 seats
 
@@ -146,6 +146,31 @@ Key: `comedy`
     { "type": "tables", "tableRows": 2, "tableColumns": 5, "seatsPerTable": 4, "category": "Table" },
     { "type": "rows", "rowCount": 4, "seatsPerRow": 20, "category": "Row", "section": "Rows" },
     { "type": "landmark", "role": "bar", "label": "Bar", "placement": "rear" }
+  ]
+}
+```
+
+## Concert hall, a ring of sections and a choir
+
+A concert hall: stalls whose rows grow from 24 seats at the front to 36 at the back, a ring of six sections behind them (14 to 16 seats a row in each), and a choir behind the stage. Stalls at 90, Ring at 60, Choir at 35.
+
+Key: `concert-hall`
+
+```json
+{
+  "$schema": "https://docs.seatlayer.io/schemas/venue-spec-v1.json",
+  "seatlayerVenueSpec": 1,
+  "name": "Harbour Concert Hall",
+  "categories": [
+    { "name": "Stalls", "price": 90 },
+    { "name": "Ring", "price": 60 },
+    { "name": "Choir", "price": 35 }
+  ],
+  "stage": {"kind": "rect", "label": "Orchestra"},
+  "items": [
+    { "type": "curvedRows", "rowCount": 12, "seatsFrontRow": 24, "seatsBackRow": 36, "aisles": "two", "category": "Stalls", "section": "Stalls" },
+    { "type": "curvedRows", "rowCount": 5, "seatsFrontRow": 14, "seatsBackRow": 16, "spreadDegrees": 200, "sections": 6, "category": "Ring", "section": "Ring" },
+    { "type": "curvedRows", "rowCount": 4, "seatsFrontRow": 8, "seatsBackRow": 11, "stageSide": "behind", "category": "Choir", "section": "Choir" }
   ]
 }
 ```
