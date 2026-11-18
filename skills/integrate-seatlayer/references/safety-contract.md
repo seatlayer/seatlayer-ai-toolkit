@@ -74,10 +74,12 @@ inventory, payments, bookings, cancellations, or webhooks.
   `4xx` responses unchanged.
 - On `429` or `503`, wait for `Retry-After` (or `retryAfterSeconds`) before
   retrying. A `429` did nothing, so the retry is safe. Never retry in a tight loop.
-- Holding, extending, releasing and booking seats from the server, and season
-  selling and renewals, are never refused for rate, so phone, box office and
-  headless sales can hold and book as fast as buyers arrive. Buyers still hold
-  from the browser in the normal web flow.
+- The docs say selling has no request budget: server hold, extend, release and the
+  Best Available routes are never refused for rate. Each hold is still bounded by
+  its TTL ceiling and the seat limit per request, and other routes keep their own
+  budgets. Check `https://docs.seatlayer.io/server-api/rate-limits/` for what
+  applies, and handle `429` on every route. Buyers still hold from the browser in
+  the normal web flow.
 - Log the `X-Request-ID` header or `requestId`, not the request credentials.
 - Live pages: `https://docs.seatlayer.io/server-api/errors/index.md` and
   `https://docs.seatlayer.io/server-api/rate-limits/index.md`.

@@ -43,6 +43,8 @@ Selling stays with the Server API and the checkout.
 - An admin approves each connection on a consent screen. One tap on **Allow**
   grants the workspace shown and every permission; **Customize** narrows it to
   one chart or turns permissions off.
+- Grant the least an agent needs: use **Customize** to choose one chart or turn
+  permissions off, and connect with `?readonly=1` when the agent only reports.
 - The event permissions are: **Create and run events**, **Set prices and
   releases**, **Manage live events**, **Manage sales channels**, **Look after
   orders**, **Read reports** and **Change seat categories**.
