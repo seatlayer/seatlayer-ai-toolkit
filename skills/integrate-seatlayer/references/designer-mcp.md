@@ -7,8 +7,7 @@ booking integration does not need it.
 
 The remote resource is `https://mcp.seatlayer.io/mcp`. It uses Streamable HTTP,
 OAuth 2.1 authorization code flow with PKCE S256, the `resource` parameter, and
-rotating refresh tokens. The server names itself `seatlayer-designer`, the key
-this toolkit's `.mcp.json` uses. The dashboard's **Agent connections** page
+rotating refresh tokens. This toolkit's `.mcp.json` names the server `seatlayer-designer`. The dashboard's **Agent connections** page
 shows the URL and publish permission for each environment. Setup guides:
 `https://docs.seatlayer.io/agents/connect-claude/index.md`,
 `https://docs.seatlayer.io/agents/connect-codex/index.md` and
@@ -32,7 +31,7 @@ for integration questions, not chart or event changes.
 | Sales channels, when allowed: allocations, channel prices and sale routes, buyer links and partner report links | |
 | Orders, when allowed: find and read orders, resend tickets, ask an admin to refund or cancel | |
 | Reports, when allowed: sales, money, door counts and the event log | |
-| Event Configurations, where the account has that module (plain URL only) | |
+| Event Configurations, where the account has that module (not in the build, events or channels sets) | |
 
 An agent on this server can prepare and publish the map buyers use and run
 events, but it cannot sell a seat, and it cannot refund or charge anyone.

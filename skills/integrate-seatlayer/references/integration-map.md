@@ -78,9 +78,10 @@ or `bookingMode: "free"`, and the checkout owner is fixed once chosen.
 | Journey analytics | Buyer SDK callbacks | `https://docs.seatlayer.io/buyer-sdk/analytics/index.md` |
 
 3D is offered for venues up to 60,000 seats. `max3DSeats` sets the limit (by default
-60,000 on desktop and 30,000 on small or low-core devices) on the JavaScript `SeatPicker`, `SeatingChart` and `SeasonPicker`, the
-React `SeatPicker` and `SeasonPicker`, and every mobile picker; the React, Vue and Angular
-`SeatingChart` components and the Vue and Angular Season pickers do not take it at 0.112.0.
+60,000 on desktop and 30,000 on small or low-core devices) on the JavaScript `SeatPicker`, `SeatingChart`, `SeasonPicker` and
+`PerformanceGroupPicker`, the React `SeatPicker` and `SeasonPicker`, and every mobile picker.
+The React `SeatingChart` accepts `max3DSeats` in its type but ignores it at 0.112.0, and the
+Vue and Angular `SeatingChart` components and Season pickers do not take it.
 
 `SeatPicker` holds the buyer's seats when they go to checkout (or when the host
 calls `holdSelection()`), then passes the `holdId` to `onCheckout`. With

@@ -133,7 +133,7 @@ const DEPRECATED_JAVASCRIPT_APIS = [
   {
     pattern: /\.boxOfficeBook\s*\(/g,
     message: "boxOfficeBook is deprecated in @seatlayer/server.",
-    remediation: "Use inventory.book({ labels, bookingRef }).",
+    remediation: "Use inventory.book(eventKey, { labels, bookingRef }).",
   },
 ];
 

@@ -75,8 +75,7 @@ inventory, payments, bookings, cancellations, or webhooks.
 - On `429` or `503`, wait for `Retry-After` (or `retryAfterSeconds`) before
   retrying. A `429` did nothing, so the retry is safe. Never retry in a tight loop.
 - The docs say selling has no request budget: server hold, extend, release and the
-  Best Available routes are never refused for rate. Each hold is still bounded by
-  its TTL ceiling and the seat limit per request, and other routes keep their own
+  Best Available routes are never refused for rate. Each hold still has a time limit and a limit of 100 seats, and other routes keep their own
   budgets. Check `https://docs.seatlayer.io/server-api/rate-limits/` for what
   applies, and handle `429` on every route. Buyers still hold from the browser in
   the normal web flow.

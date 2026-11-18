@@ -76,8 +76,8 @@ row, tables and chairs, standing capacity, or booths.
    brings its own stage: leave `stage` out and use `base.stageKind`.
 7. Without `base`, a plain stage is added unless `stage` is `false`.
 8. Prices are plain numbers in the event currency, with no currency symbol.
-   Give every category a price unless the user said not to: an event must
-   price an empty one before it can sell.
+   Give every category a price unless the user said not to: a SeatLayer-checkout
+   event must price an empty one before it can sell.
 
 ## Top level
 
