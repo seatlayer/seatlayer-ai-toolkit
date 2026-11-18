@@ -77,8 +77,8 @@ or `bookingMode: "free"`, and the checkout owner is fixed once chosen.
 | Buyer picks a Season or a run of performances | `SeasonPicker` (JavaScript, React, Vue, Angular) or `PerformanceGroupPicker` (JavaScript) | `https://docs.seatlayer.io/buyer-sdk/seasons/index.md`, `https://docs.seatlayer.io/buyer-sdk/performance-groups/index.md` |
 | Journey analytics | Buyer SDK callbacks | `https://docs.seatlayer.io/buyer-sdk/analytics/index.md` |
 
-3D is offered for venues up to 30,000 seats on phones and 60,000 on desktop by
-default. `max3DSeats` changes it on the JavaScript `SeatPicker`, `SeatingChart` and `SeasonPicker`, the
+3D is offered for venues up to 60,000 seats. `max3DSeats` sets the limit (by default
+60,000 on desktop and 30,000 on small or low-core devices) on the JavaScript `SeatPicker`, `SeatingChart` and `SeasonPicker`, the
 React `SeatPicker` and `SeasonPicker`, and every mobile picker; the React, Vue and Angular
 `SeatingChart` components and the Vue and Angular Season pickers do not take it at 0.112.0.
 
