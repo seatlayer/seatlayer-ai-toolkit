@@ -187,3 +187,138 @@ test("requires an audit reason for a privileged channel override", async () => {
   assert.equal(report.summary.warning, 1);
   assert.equal(report.findings[0].code, "SL105");
 });
+
+test("accepts a server SDK booking with a bookingRef and conflict handling", async () => {
+  const root = await fixture({
+    ".env.example": "SEATLAYER_SECRET_KEY=\n",
+    "server/api/checkout.ts": `
+      import { SeatLayer, SeatLayerConflictError } from "@seatlayer/server";
+      const seatlayer = new SeatLayer(process.env.SEATLAYER_SECRET_KEY);
+      export async function book(eventKey, holdId, order) {
+        try {
+          return await seatlayer.inventory.book(eventKey, { holdId, bookingRef: order.id });
+        } catch (error) {
+          if (error instanceof SeatLayerConflictError) return { kind: "conflict" };
+          throw error;
+        }
+      }
+    `,
+  });
+
+  const report = await scanRepository(root);
+
+  assert.deepEqual(report.summary, { critical: 0, warning: 0, info: 0 });
+});
+
+test("flags a Python SDK booking with no bookingRef or conflict path", async () => {
+  const root = await fixture({
+    "server/checkout.py": `
+from seatlayer import SeatLayer
+client = SeatLayer(os.environ["SEATLAYER_SECRET_KEY"])
+
+def book(event_key, hold_id):
+    return client.inventory.book(event_key, hold_id=hold_id)
+`,
+  });
+
+  const report = await scanRepository(root);
+  const codes = new Set(report.findings.map((finding) => finding.code));
+
+  assert.equal(report.summary.critical, 0);
+  assert.equal(report.summary.warning, 2);
+  assert(codes.has("SL101"));
+  assert(codes.has("SL102"));
+});
+
+test("does not ask for a named bookingRef where the SDK takes it positionally", async () => {
+  const root = await fixture({
+    ".env.example": "SEATLAYER_SECRET_KEY=\n",
+    "server/Checkout.cs": `
+      // SeatLayer booking for a paid order
+      var booked = await seatlayer.Inventory.BookAsync(eventKey, holdId, order.Id);
+      if (status == 409) return Conflict();
+    `,
+  });
+
+  const report = await scanRepository(root);
+
+  assert.equal(report.summary.warning, 0);
+});
+
+test("flags a secret key named with a public prefix", async () => {
+  const root = await fixture({
+    ".env.local": "NEXT_PUBLIC_SEATLAYER_SECRET_KEY=\n",
+    "src/lib/seatlayer.ts": "export const key = process.env.NEXT_PUBLIC_SEATLAYER_SECRET_KEY;\n",
+  });
+
+  const report = await scanRepository(root);
+
+  assert.equal(report.summary.critical, 2);
+  assert(report.findings.every((finding) => finding.code === "SL006"));
+});
+
+test("flags secrets in Flutter and iOS app code", async () => {
+  const root = await fixture({
+    "lib/checkout.dart": "const key = String.fromEnvironment('SEATLAYER_SECRET_KEY'); // SeatLayer\n",
+    "ios/SeatLayerCheckout.swift": 'let key = "sk_test_abcdefghijklmnop" // api.seatlayer.io\n',
+  });
+
+  const report = await scanRepository(root);
+  const codes = new Set(report.findings.map((finding) => finding.code));
+
+  assert.equal(report.summary.critical, 2);
+  assert(codes.has("SL001"));
+  assert(codes.has("SL002"));
+});
+
+test("reports deprecated options and older package versions as info", async () => {
+  const root = await fixture({
+    "package.json": JSON.stringify(
+      {
+        dependencies: {
+          "@seatlayer/js": "0.112.0",
+          "@seatlayer/react": "^0.100.0",
+          "@seatlayer/server": "^0.8.0",
+        },
+      },
+      null,
+      2,
+    ),
+    "pubspec.yaml": "name: box_office\ndependencies:\n  seatlayer: ^0.11.0\n",
+    "src/components/Picker.tsx": `
+      "use client";
+      import { SeatPicker } from "@seatlayer/react";
+      export function Picker() { return <SeatPicker event="ev_test" hideBadge />; }
+    `,
+  });
+
+  const report = await scanRepository(root);
+  const count = (code) => report.findings.filter((finding) => finding.code === code).length;
+
+  assert.equal(report.summary.critical, 0);
+  assert.equal(report.summary.warning, 0);
+  assert.equal(count("SL301"), 1);
+  assert.equal(count("SL302"), 3);
+  assert.equal(count("SL303"), 1);
+});
+
+test("accepts webhook verification through a server SDK", async () => {
+  const root = await fixture({
+    "server/webhooks/seatlayer.py": `
+from seatlayer import verify_webhook
+
+def seatlayer_webhook(request):
+    event = verify_webhook(request.body, header_value(request), WEBHOOK_SECRET)
+    record(event)
+    return "ok"
+
+
+def header_value(request):
+    return request.headers.get("X-SeatLayer-Signature")
+`,
+  });
+
+  const report = await scanRepository(root);
+
+  assert.equal(report.summary.warning, 0);
+});

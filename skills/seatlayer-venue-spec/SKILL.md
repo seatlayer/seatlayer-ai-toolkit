@@ -18,8 +18,8 @@ carries coordinates.
 
 ### If the SeatLayer MCP connector is available
 
-The tools below are in every toolset, including the smaller
-`https://mcp.seatlayer.io/mcp?tools=build` connection.
+The tools below are all in the smaller
+`https://mcp.seatlayer.io/mcp?tools=build` connection and on the plain URL.
 
 1. `get_chart` for `meta.updatedAt`. On a workspace connection with no chart
    selected, `create_chart` first.
@@ -76,6 +76,8 @@ row, tables and chairs, standing capacity, or booths.
    brings its own stage: leave `stage` out and use `base.stageKind`.
 7. Without `base`, a plain stage is added unless `stage` is `false`.
 8. Prices are plain numbers in the event currency, with no currency symbol.
+   Give every category a price unless the user said not to: a SeatLayer-checkout
+   event must price an empty one before it can sell.
 
 ## Top level
 
@@ -100,8 +102,8 @@ Stage `kind`: `rect` (default), `rounded`, `arc`, `thrust`, `runway`, `round`,
 
 | type | Fields |
 |---|---|
-| `rows` | `rowCount`* 1-100, `seatsPerRow`* 1-300 (the whole row, across all blocks), `blocks` 1-8 (default 1; 2 = one centre aisle), `category`, `placement`, `section` |
-| `curvedRows` | `rowCount`* 1-60, `spreadDegrees` 20-360 (180 semicircle; 360 all round; leave out to fit `seatsPerRow`, else 100), `seatsPerRow` 2-300 (leave out to fit), `aisles` none/center/two, `firstRowDistanceM` 1-200 (default 4), `category`, `section`. Always behind the seats already placed; no `placement` |
+| `rows` | `rowCount`* 1-100, `seatsPerRow`* 1-300 (the whole row, across all blocks) or, for rows that grow, `seatsFrontRow` and `seatsBackRow` 1-300, `blocks` 1-8 (default 1; 2 = one centre aisle), `rowLetters` perBlock/continuous (default continuous; use perBlock for new specs: each block starts at row A, seats read 1-A-5, 2-A-5), `category`, `placement`, `section` |
+| `curvedRows` | `rowCount`* 1-60, `spreadDegrees` 20-360 (180 semicircle; 360 all round; leave out to fit `seatsPerRow`, else 100), `seatsPerRow` 2-300 (leave out to fit) or `seatsFrontRow` and `seatsBackRow` 2-300 for rows that grow, `aisles` none/center/two, `sections` 2-12 or `sectionNames` (a ring of named sections side by side, an aisle between each; the seat counts are then for one section; no `aisles`), `stageSide` front/behind (behind = a choir or the far side of a stage in the round), `firstRowDistanceM` 1-200 (default 4), `category`, `section`. Always behind the seats already placed on that side; no `placement` |
 | `tables` | `tableRows`* 1-20, `tableColumns`* 1-20, `seatsPerTable` 1-20 (default 8), `shape` round/rect, `category`, `placement`, `section` |
 | `standing` | `capacity`* 1-100000, `label` (default "General Admission"), `category`, `placement` |
 | `booths` | `boothRows`* 1-30, `boothColumns`* 1-30, `category`, `placement`, `section` |
@@ -110,6 +112,7 @@ Stage `kind`: `rect` (default), `rounded`, `arc`, `thrust`, `runway`, `round`,
 | `area` | `label`*, `widthM`* and `depthM`* 0.5-400 metres, `shape` rect/ellipse, `placement`, `near`, `side`. For spaces nobody books: dance floor, desk, lounge |
 
 `seatsPerRow` counts the whole row: 24 with `blocks: 2` is two blocks of 12 (an odd seat goes to the first block).
+`seatsFrontRow` and `seatsBackRow` count the row nearest the stage and the one furthest from it; the rows between grow evenly.
 
 Landmark `role`: bar, entrance, exit, restroom, screen, sound, concession,
 coat, wall, rail, suite, obstruction.
@@ -140,14 +143,18 @@ error.
 
 | layout | Reads |
 |---|---|
-| rows | rowCount, seatsPerRow, blocks, floors |
-| bowl | rowCount, seatsPerRow, sectionCount, standingCapacity, floors |
+| rows | rowCount, seatsPerRow, blocks, floors, rowLetters |
+| bowl | rowCount, seatsPerRow, sectionCount, standingCapacity, floors, rowLetters |
 | tables, ushape | tableRows, tableColumns |
 | booths | boothRows, boothColumns |
 | nightclub | standingCapacity |
 | runway | rowCount, seatsPerRow |
 | restaurant | nothing extra |
-| hybrid | rowCount, seatsPerRow, blocks, standingCapacity |
+| hybrid | rowCount, seatsPerRow, blocks, standingCapacity, rowLetters |
+
+`rowLetters` perBlock (use it for new specs): every stand or block starts at
+row A and seats read N1-A-14 (bowl) or F1-B-C-5 (rows). Left out it is
+continuous: rows lettered on round the whole venue, as before.
 
 Every layout also reads `stageKind` (rect, rounded, arc, thrust, runway,
 round) and `sectionNames` (named clockwise from the stage end: North, East,
@@ -186,7 +193,7 @@ A 400-seat theatre: stalls in two blocks, curved rear stalls, two prices.
 }
 ```
 
-More in `examples.md`: wedding, club, arena, expo and comedy club.
+More in `examples.md`: wedding, club, arena, expo, comedy club and concert hall.
 
 ## Common mistakes
 

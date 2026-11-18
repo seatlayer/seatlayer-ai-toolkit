@@ -23,27 +23,30 @@ the result.
 [SeatLayer for developers](https://seatlayer.io/developers/) ·
 [SeatLayer on GitHub](https://github.com/seatlayer)
 
-**Start here:** [Quickstart](https://docs.seatlayer.io/start/quickstart/) · [Holds and checkout](https://docs.seatlayer.io/buyer-sdk/holds-and-checkout/) · [Build integrations with agents](https://docs.seatlayer.io/agents/overview/) · [SDK catalog](https://docs.seatlayer.io/sdk-catalog.json) · [Pricing](https://seatlayer.io/pricing/): $0 entry, 100 free confirmed-sold-seat credits per organization each month, then $0.10 down to $0.05 a credit, and credits never expire.
+**Start here:** [Quickstart](https://docs.seatlayer.io/start/quickstart/) · [Holds and checkout](https://docs.seatlayer.io/buyer-sdk/holds-and-checkout/) · [Build integrations with agents](https://docs.seatlayer.io/agents/overview/) · [SDK catalog](https://docs.seatlayer.io/sdk-catalog.json) · [Pricing](https://seatlayer.io/pricing/): Hosted Ticketing $0.50 per ticket, your first 25 free; SDK and API 10¢ down to 5¢ per sold seat, with 100 free every month. No subscription, test mode is free, and purchased credits never expire.
 
 ## Scale evidence
 
-Benchmarked on public 100,000-, 150,000- and 200,000-seat venue fixtures on 15 September 2026: 200,000 seats chart-ready in 1.95 s, desktop, local production build. Fixtures, method and run logs: https://github.com/seatlayer/seatlayer-performance. Live 200,000-seat stadium demo: https://app.seatlayer.io/demo/play/century-stadium-200k. This is renderer evidence, not a concurrent-buyer claim.
+Benchmarked on public 100,000-, 150,000- and 200,000-seat venue fixtures on 15 September 2026: 200,000 seats chart-ready in 1.95 s, desktop, local production build. Tested at 10,000 simulated concurrent buyers on one 12,000-seat event (18 September 2026): engine-side hold latency p99 9 ms, zero server errors. Method, fixtures and run files: https://github.com/seatlayer/seatlayer-performance. Live 200,000-seat stadium demo: https://app.seatlayer.io/demo/play/century-stadium-200k. The two results come from separate tests and are not combinable into a claim about 10,000 buyers on a very large event.
 
 ## Choose the integration before the package
 
 | Outcome | Start here | Commerce owner |
 |---|---|---|
-| Share a complete booking page | Hosted Event Page | SeatLayer managed ticketing |
-| Put managed checkout in an existing site | Managed embed | SeatLayer managed ticketing |
-| Publish one or many events as a site | Organizer Website | SeatLayer managed ticketing |
+| Share a complete booking page | Hosted Event Page | SeatLayer Hosted Ticketing |
+| Put managed checkout in an existing site | Managed embed | SeatLayer Hosted Ticketing |
+| Publish one or many events as a site | Organizer Website or ticket site | SeatLayer Hosted Ticketing |
+| Sell from your own page with no backend | `SeatPicker` with `checkout: 'hosted'` | SeatLayer Hosted Ticketing |
+| Create and sell SeatLayer-checkout events from your server | Events API with `buyerCheckout: "seatlayer"` | SeatLayer Hosted Ticketing |
 | Add seating to an existing checkout | `SeatPicker` or `SeatingChart` | Your platform |
+| Sell season tickets | SeatLayer season pages, or `SeasonPicker` with the season API | SeatLayer checkout or your platform |
 | Sell a private, partner, sponsor, or presale allocation | Hosted access link or buyer access session | Depends on the selected product profile |
-| Build a mobile buyer experience | React Native, Flutter, iOS, or Android SDK | Your platform |
+| Build a mobile buyer experience for single events | React Native, Flutter, iOS, or Android SDK | Your platform |
 | Add organizer chart or event operations | Embedded Designer or control room | Your platform |
 
 Read [Choose an integration](https://docs.seatlayer.io/start/choose-an-integration/)
 before implementing. A managed hosted surface does not require a host booking
-endpoint. A platform/custom checkout does.
+endpoint. A Platform/SDK checkout does.
 
 ## SeatLayer package ecosystem
 
@@ -88,17 +91,18 @@ Choose the interface for the task:
   `https://docs.seatlayer.io/mcp` (11 read-only tools, such as `search_docs`,
   `get_page` and `sdks`) and [Markdown documentation index](https://docs.seatlayer.io/llms.txt)
   help an agent find the current API and SDK guidance.
-- **Chart authoring:** [Designer MCP](https://docs.seatlayer.io/agents/designer-mcp/)
+- **Charts and events:** the [SeatLayer MCP](https://docs.seatlayer.io/agents/designer-mcp/)
   connects an authorized agent to one chart or a workspace. It builds, traces,
-  validates, reviews and publishes charts, manages Event Configurations, and,
-  when the admin allows it, controls live sections and seat blocks. It cannot
-  hold, book or refund seats. Use the documented approval flow before
-  publishing changes. Chat hosts can connect to
+  checks, previews and publishes charts, and when the admin allows it, it sets
+  up events, prices, sales channels and live seat blocks, and reads sales and
+  door reports. It never sells a seat to a buyer and never refunds or charges
+  anyone: a refund it asks for waits for an admin. Use the documented approval
+  flow before publishing changes. Chat hosts can connect to
   `https://mcp.seatlayer.io/mcp?tools=build` for the smaller set of tools that
   build, edit, check and publish.
 - **Charts from a description:** a [Venue Spec](https://docs.seatlayer.io/agents/venue-spec/)
   is a short JSON file that says what a venue has and where, in words. With the
-  Designer MCP an agent checks and builds it in one call; without it, the user
+  SeatLayer MCP an agent checks and builds it in one call; without it, the user
   pastes the agent's reply into the Designer.
 - **Buyer seat selection:** [WebMCP seat-selection tools](https://docs.seatlayer.io/buyer-sdk/webmcp-agent-tools/)
   let a compatible browser assistant describe a chart, find seats, and update
@@ -106,33 +110,66 @@ Choose the interface for the task:
   host checkout flow.
 
 This toolkit helps implement those integrations. The documentation MCP,
-Designer MCP, and buyer WebMCP tools are separate interfaces.
+SeatLayer MCP, and buyer WebMCP tools are separate interfaces.
 
 ## What is included
 
 - `integrate-seatlayer`: a portable Agent Skill for implementation, review,
   troubleshooting, and go-live work. Its references route an agent to the live
   pages for event setup and ticket limits, the 14 payment gateways, 3D views,
-  resale, Seasons and Season Best Available, API errors and rate limits, the 40
-  webhook events, SeatManager hover prices, Click the plan, and migration from
-  seats.io.
+  resale, Seasons and Season Best Available, API errors and retries, webhooks
+  and their events, SeatManager hover prices, Click the plan, and migration
+  from seats.io.
 - `seatlayer-venue-spec`: an Agent Skill that turns a description of a venue
   ("12 rows of 18, front two VIP, bar at the back") into a Venue Spec and
-  builds the chart through the Designer MCP, or hands the user a file to paste
+  builds the chart through the SeatLayer MCP, or hands the user a file to paste
   into the Designer. Worked examples for a theatre, wedding, club, arena, expo
   and comedy club are in `examples.md`.
-- `seatlayer-ai doctor`: deterministic checks for exposed credentials,
-  server packages in client code, browser-side booking, unsafe buyer-access
-  token handling, missing idempotency and conflict handling, unaudited channel
-  overrides, and weak webhook verification.
+- `seatlayer-ai doctor`: deterministic checks for exposed credentials
+  (including a secret key named with a public prefix such as `NEXT_PUBLIC_`,
+  and secret keys in Flutter, iOS and Android app code), server packages in
+  client code, browser-side booking, unsafe buyer-access token handling,
+  missing idempotency and conflict handling on raw HTTP and server SDK
+  bookings, unaudited channel overrides, and weak webhook verification. It also notes options that do nothing in
+  `@seatlayer/js` 0.112.0 and packages older than the release it was checked
+  against.
 - Claude Code commands for setup, integration, diagnosis, verification, and
   `/seatlayer:chart` to build a chart from a description.
 - Codex and Claude plugin manifests.
 - MCP configuration for both servers: the anonymous documentation MCP and the
-  OAuth Designer MCP. Publication always requires an explicit human decision.
+  OAuth SeatLayer MCP. A chart is published only after a person approves its
+  review.
 - A Claude Code hook that adds a short SeatLayer reminder to the assistant's
   context when an edit touches SeatLayer code. It never blocks or approves an
   edit.
+
+## Frequently asked questions
+
+### Can an AI agent build a seating chart?
+
+Yes. Describe the venue in plain words, such as "12 rows of 18, front two VIP,
+bar at the back", and the `seatlayer-venue-spec` skill turns it into a Venue
+Spec that SeatLayer checks before it builds the chart, through the SeatLayer
+MCP or by pasting the file into the Designer. It works with Claude, ChatGPT,
+Codex, Claude Code or any MCP client, and every seat in the result stays
+editable. The chart goes on sale only after a person approves it.
+
+### Can a coding agent add a seat map and checkout to my app?
+
+Yes. The `integrate-seatlayer` skill has the agent read your repository, choose
+between SeatLayer's hosted checkout and your own checkout, load only the docs
+pages it needs, add the seat map and, when you keep your own checkout, the
+server step that books the hold, and prove the result. It works in Claude Code,
+Codex, GitHub Copilot or any agent that reads a skill file.
+`seatlayer-ai doctor` then checks the code for exposed keys, browser-side
+booking and missing idempotency.
+
+### Does the AI publish changes on its own?
+
+No. Every chart change is a draft you can review or undo, and a chart is
+published only after you approve its review. A change to an event on sale
+waits for your yes, the agent never sells a seat to a buyer, and a refund it
+asks for waits for an admin.
 
 ## Quick start
 
@@ -240,10 +277,10 @@ environment-variable values, and ignores dependencies and build output.
 
 ## Core safety boundaries
 
-- Choose managed ticketing or platform/custom commerce before choosing an SDK.
+- Choose Hosted Ticketing or Platform/SDK before choosing an SDK.
 - Managed hosted checkout owns payment, Orders, tickets, and booking; do not add
   a duplicate host booking endpoint.
-- In platform/custom commerce, the browser selects and holds while a trusted
+- In Platform/SDK, the browser selects and holds while a trusted
   server inspects and books.
 - `SEATLAYER_SECRET_KEY` never enters browser code.
 - Payment amounts come from trusted server data, not browser input.
@@ -251,7 +288,8 @@ environment-variable values, and ignores dependencies and build output.
 - Inventory conflicts and expired holds are normal recovery paths.
 - Buyer access tokens are event- and origin-bound capabilities. Keep them in
   memory, never in storage, URLs, logs, analytics, or exception text.
-- A private event is token-gated and has **no public link**; it is not hard-off.
+- A private event is token-gated and has **no public link**, but it is still on
+  sale to buyers who hold a valid token.
 - Listing an event on an Organizer Website makes it discoverable on that public
   Website and must be an explicit organizer decision.
 - Webhook signatures are verified from the raw request body.
@@ -278,13 +316,15 @@ The included `.mcp.json` configures two remote Streamable HTTP servers:
 
 - `seatlayer-docs` at `https://docs.seatlayer.io/mcp`: public, anonymous,
   read-only product knowledge and documentation search.
-- `seatlayer-designer` at `https://mcp.seatlayer.io/mcp`: chart authoring with
-  OAuth 2.1 and PKCE, scoped to one chart or one workspace. Availability and
-  publish permission are shown on the dashboard's Agent connections page.
+- `seatlayer-designer` at `https://mcp.seatlayer.io/mcp`: the SeatLayer MCP,
+  for chart and event work, with OAuth 2.1 and PKCE, scoped to one chart or one
+  workspace. Availability and publish permission are shown on the dashboard's
+  Agent connections page.
 
-The integration skill must not use Designer MCP unless the task involves chart
-authoring or review. It must never publish without the user's explicit
-authorization.
+The integration skill uses the SeatLayer MCP only for chart or event work,
+never for application code. It never publishes a chart without the user's
+explicit approval, and a change to an event on sale waits for the user's yes
+to its plan.
 
 ## Development
 

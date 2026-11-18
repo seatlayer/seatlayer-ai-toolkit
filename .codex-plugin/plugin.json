@@ -20,7 +20,7 @@
   "interface": {
     "displayName": "SeatLayer AI Toolkit",
     "shortDescription": "Build and verify every SeatLayer integration path.",
-    "longDescription": "Chooses the correct hosted, buyer SDK, private-access, server SDK, or operator surface; adds deterministic safety diagnostics and the optional Designer MCP connection, and builds seating charts from a description of the venue.",
+    "longDescription": "Chooses the correct hosted, buyer SDK, private-access, server SDK, or operator surface; adds deterministic safety diagnostics and the optional SeatLayer MCP connection for chart and event work, and builds seating charts from a description of the venue.",
     "developerName": "SeatLayer",
     "category": "Productivity",
     "capabilities": [],
@@ -28,7 +28,7 @@
     "defaultPrompt": [
       "Build a seating chart for my venue from a description.",
       "Integrate SeatLayer into this repository.",
-      "Choose between SeatLayer hosted checkout and a custom checkout.",
+      "Choose between SeatLayer Hosted Ticketing and your own checkout (Platform/SDK).",
       "Build a private or partner SeatLayer sale safely.",
       "Audit this SeatLayer integration before launch.",
       "Verify the SeatLayer hold-to-book flow."

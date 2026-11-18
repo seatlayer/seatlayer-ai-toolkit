@@ -80,7 +80,7 @@ assert(
 assert(
   mcp.mcpServers?.["seatlayer-designer"]?.url ===
     "https://mcp.seatlayer.io/mcp",
-  "Designer MCP URL is missing or incorrect",
+  "SeatLayer MCP URL is missing or incorrect",
 );
 assert(
   mcp.mcpServers?.["seatlayer-docs"]?.url === "https://docs.seatlayer.io/mcp",

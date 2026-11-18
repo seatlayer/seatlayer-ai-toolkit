@@ -5,13 +5,20 @@ inventory, payments, bookings, cancellations, or webhooks.
 
 ## Choose the commerce authority
 
-- In managed ticketing, SeatLayer hosted checkout owns payment, Orders, booking,
+- In Hosted Ticketing, SeatLayer hosted checkout owns payment, Orders, booking,
   tickets, delivery, refunds, and Door. The host places a Hosted Event Page,
   managed embed, or Organizer Website and must not book the same journey again.
-- In platform/custom commerce, the browser may render, select, hold, release,
+- In Platform/SDK, the browser may render, select, hold, release,
   and hand off an opaque `holdId`. A trusted host server authorizes the order,
   inspects the hold, calculates the trusted charge, coordinates payment, and
   books.
+- With `checkout: 'hosted'`, a picker takes payment through SeatLayer checkout
+  and SeatLayer keeps the order. On `SeatPicker`, `onCheckout` then fires only
+  when the event cannot take payment there (after `onCheckoutUnavailable`), so
+  book from the host server only those holds. `SeasonPicker` (`onContinue`) and
+  `PerformanceGroupPicker` (`onCheckout`) still fire in hosted mode to report
+  the moment; never book from those callbacks when the season or run is sold
+  through SeatLayer checkout.
 - Never call the server booking endpoint or import a SeatLayer server SDK from
   browser or mobile-bundle code.
 
@@ -59,7 +66,7 @@ inventory, payments, bookings, cancellations, or webhooks.
 - Define what happens when payment succeeds but booking cannot complete:
   automatic void/refund, durable retry, or operator recovery.
 
-## Errors and rate limits
+## Errors and retries
 
 - Branch on the stable `error` field (and `code` when present), never on
   `message`. Treat unknown extra fields as detail, not a different error.
@@ -67,9 +74,11 @@ inventory, payments, bookings, cancellations, or webhooks.
   `4xx` responses unchanged.
 - On `429` or `503`, wait for `Retry-After` (or `retryAfterSeconds`) before
   retrying. A `429` did nothing, so the retry is safe. Never retry in a tight loop.
-- The five server hold routes share one 600-per-minute budget per secret key.
-  Let buyers hold from the browser, which is counted per IP, and keep server
-  holds for phone, box office, and headless sales.
+- The docs say selling has no request budget: server hold, extend, release and the
+  Best Available routes are never refused for rate. Each hold still has a time limit and a limit of 100 seats, and other routes keep their own
+  budgets. Check `https://docs.seatlayer.io/server-api/rate-limits/` for what
+  applies, and handle `429` on every route. Buyers still hold from the browser in
+  the normal web flow.
 - Log the `X-Request-ID` header or `requestId`, not the request credentials.
 - Live pages: `https://docs.seatlayer.io/server-api/errors/index.md` and
   `https://docs.seatlayer.io/server-api/rate-limits/index.md`.
@@ -100,9 +109,9 @@ inventory, payments, bookings, cancellations, or webhooks.
 ## Webhooks
 
 - Verify signatures using the exact raw request body.
-- Handle the event name as a string with a default branch. There are 40 public
-  event names; the `0.8.0` server SDKs type 30 of them, and the rest (resale,
-  Season dates, performances, Season orders) arrive with the same envelope.
+- Handle the event name as a string with a default branch. New event names are
+  added over time, and an SDK version may not type every name the API sends;
+  each arrives with the same envelope. The live catalog lists them all.
 - Deduplicate by the documented occurrence identity.
 - Acknowledge delivery quickly and move slow work to a durable queue when the
   host architecture supports it.

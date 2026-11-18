@@ -13,7 +13,7 @@ Use the `integrate-seatlayer` skill and read its verification reference.
    existing integration/browser tests.
 3. Inspect the browser build for server credentials and server-only modules.
 4. Identify the selected commerce profile. For managed checkout, trace hosted
-   select → payment → Order → ticket → branded return. For custom commerce,
+   select → payment → Order → ticket → branded return. For Platform/SDK,
    trace select → hold → server inspect → trusted order/payment → book.
 5. Verify only the relevant matrix, including hosted direct/embed/Website
    routing or private wrong-origin/expired/revoked access where applicable.
