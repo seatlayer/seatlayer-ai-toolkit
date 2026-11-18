@@ -5,10 +5,10 @@ inventory, payments, bookings, cancellations, or webhooks.
 
 ## Choose the commerce authority
 
-- In managed ticketing, SeatLayer hosted checkout owns payment, Orders, booking,
+- In Hosted Ticketing, SeatLayer hosted checkout owns payment, Orders, booking,
   tickets, delivery, refunds, and Door. The host places a Hosted Event Page,
   managed embed, or Organizer Website and must not book the same journey again.
-- In platform/custom commerce, the browser may render, select, hold, release,
+- In Platform/SDK, the browser may render, select, hold, release,
   and hand off an opaque `holdId`. A trusted host server authorizes the order,
   inspects the hold, calculates the trusted charge, coordinates payment, and
   books.

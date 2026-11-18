@@ -31,7 +31,7 @@ confirm no server credential or server-only module is present.
 
 Do not require or create a host booking endpoint for this profile.
 
-## Platform/custom-commerce matrix
+## Platform/SDK matrix
 
 | Case | Evidence |
 |---|---|
@@ -93,7 +93,7 @@ Follow the go-live checklist at
 3. Select reserved seats and any required GA/ticket tiers without creating
    unnecessary holds.
 4. For managed checkout, use the safe test-payment path and confirm one hosted
-   Order and branded return. For custom commerce, inspect the hold, submit once,
+   Order and branded return. For Platform/SDK, inspect the hold, submit once,
    and observe one host order and stable booking reference.
 5. Exercise only safe expiry, conflict, cancel, or access-denial paths available
    in the test environment.

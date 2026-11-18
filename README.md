@@ -33,11 +33,11 @@ Benchmarked on public 100,000-, 150,000- and 200,000-seat venue fixtures on 15 S
 
 | Outcome | Start here | Commerce owner |
 |---|---|---|
-| Share a complete booking page | Hosted Event Page | SeatLayer managed ticketing |
-| Put managed checkout in an existing site | Managed embed | SeatLayer managed ticketing |
-| Publish one or many events as a site | Organizer Website or ticket site | SeatLayer managed ticketing |
-| Sell from your own page with no backend | `SeatPicker` with `checkout: 'hosted'` | SeatLayer managed ticketing |
-| Create and sell SeatLayer-checkout events from your server | Events API with `buyerCheckout: "seatlayer"` | SeatLayer managed ticketing |
+| Share a complete booking page | Hosted Event Page | SeatLayer Hosted Ticketing |
+| Put managed checkout in an existing site | Managed embed | SeatLayer Hosted Ticketing |
+| Publish one or many events as a site | Organizer Website or ticket site | SeatLayer Hosted Ticketing |
+| Sell from your own page with no backend | `SeatPicker` with `checkout: 'hosted'` | SeatLayer Hosted Ticketing |
+| Create and sell SeatLayer-checkout events from your server | Events API with `buyerCheckout: "seatlayer"` | SeatLayer Hosted Ticketing |
 | Add seating to an existing checkout | `SeatPicker` or `SeatingChart` | Your platform |
 | Sell season tickets | SeatLayer season pages, or `SeasonPicker` with the season API | SeatLayer checkout or your platform |
 | Sell a private, partner, sponsor, or presale allocation | Hosted access link or buyer access session | Depends on the selected product profile |
@@ -46,7 +46,7 @@ Benchmarked on public 100,000-, 150,000- and 200,000-seat venue fixtures on 15 S
 
 Read [Choose an integration](https://docs.seatlayer.io/start/choose-an-integration/)
 before implementing. A managed hosted surface does not require a host booking
-endpoint. A platform/custom checkout does.
+endpoint. A Platform/SDK checkout does.
 
 ## SeatLayer package ecosystem
 
@@ -277,10 +277,10 @@ environment-variable values, and ignores dependencies and build output.
 
 ## Core safety boundaries
 
-- Choose managed ticketing or platform/custom commerce before choosing an SDK.
+- Choose Hosted Ticketing or Platform/SDK before choosing an SDK.
 - Managed hosted checkout owns payment, Orders, tickets, and booking; do not add
   a duplicate host booking endpoint.
-- In platform/custom commerce, the browser selects and holds while a trusted
+- In Platform/SDK, the browser selects and holds while a trusted
   server inspects and books.
 - `SEATLAYER_SECRET_KEY` never enters browser code.
 - Payment amounts come from trusted server data, not browser input.

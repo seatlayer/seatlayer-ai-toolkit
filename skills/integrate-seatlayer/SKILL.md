@@ -15,7 +15,7 @@ unless the user explicitly asks for one.
 2. Inspect the package manager, framework, routing, server/client boundary,
    authentication, tenant model, order/payment flow, environment validation,
    HTTP conventions, tests, analytics adapter, and deployment platform.
-3. Determine whether SeatLayer managed ticketing or the host platform owns
+3. Determine whether SeatLayer Hosted Ticketing or the host platform owns
    payment, commercial orders, tickets, refunds, and fulfilment.
 4. Run the read-only doctor when Node.js is available:
 
@@ -51,12 +51,12 @@ documentation and report the discrepancy.
 
 Choose the commerce profile first:
 
-- Managed ticketing when SeatLayer owns hosted checkout, Orders, tickets,
+- Hosted Ticketing when SeatLayer owns hosted checkout, Orders, tickets,
   delivery, refunds, and Door. Use a Hosted Event Page, managed embed,
   Organizer Website or ticket site, a `SeatPicker` with `checkout: 'hosted'`,
   or events a server creates with `buyerCheckout: "seatlayer"`. Do not add a
   host booking endpoint for these sales.
-- Platform/custom commerce when the host owns payment, orders, tickets,
+- Platform/SDK when the host owns payment, orders, tickets,
   refunds, and fulfilment. Use `SeatPicker` for checkout handoff or
   `SeatingChart` for headless selection, then book from a trusted server.
 - Private or partner distribution when access is limited by allocation. Choose
@@ -87,10 +87,10 @@ Implement the invariants for the selected profile:
 1. A chart is reusable geometry; each event has independent live inventory.
 2. Managed hosted checkout completes booking itself; never book the same buyer
    journey again from host code.
-3. In platform/custom commerce, the browser selects and holds while a trusted
+3. In Platform/SDK, the browser selects and holds while a trusted
    server inspects and books.
 4. `SEATLAYER_SECRET_KEY` and every server SDK are server-only.
-5. Browser prices are never trusted payment input in custom commerce.
+5. Browser prices are never trusted payment input in Platform/SDK.
 6. Use a stable host order id as `bookingRef` and reuse it for retries.
 7. Treat expired holds and HTTP `409` inventory conflicts as normal recovery
    paths.
@@ -116,7 +116,7 @@ For managed hosted checkout:
 3. Verify hosted payment, branded return, Orders, ticket delivery, loading,
    mobile, and accessibility behavior in test mode.
 
-For platform/custom commerce:
+For Platform/SDK:
 
 1. Add environment validation and the official server SDK server-side.
 2. Add hold inspection, trusted pricing, order coordination, and idempotent
@@ -141,7 +141,7 @@ integration tests.
 
 Prove only the behavior belonging to the selected profile. For managed hosted
 checkout, verify the hosted purchase and return journey without adding a host
-booking assertion. For custom commerce, verify select → hold → inspect →
+booking assertion. For Platform/SDK, verify select → hold → inspect →
 pay/order → book, expiry, conflicts, idempotent retry, and compensation. For
 private access, also verify wrong-origin, expired, revoked, and exhausted access
 without silently widening to public inventory.

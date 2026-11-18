@@ -20,12 +20,12 @@ listed live Markdown pages plus any exact reference page discovered through
 
 | Host outcome | Product/surface | Live documentation |
 |---|---|---|
-| SeatLayer owns checkout, Orders, tickets, refunds, and Door | Managed ticketing | `https://docs.seatlayer.io/start/first-event/index.md` |
-| Hosted Ticketing overview for organizers | Managed ticketing | `https://docs.seatlayer.io/sell/overview/index.md` |
+| SeatLayer owns checkout, Orders, tickets, refunds, and Door | Hosted Ticketing | `https://docs.seatlayer.io/start/first-event/index.md` |
+| Hosted Ticketing overview for organizers | Hosted Ticketing | `https://docs.seatlayer.io/sell/overview/index.md` |
 | Free or paid, payment account, booking form, ticket limits, hold time | Event setup | `https://docs.seatlayer.io/sell/event-setup/index.md` |
 | Connect one of the 14 payment gateways | Payments | `https://docs.seatlayer.io/sell/connect-payments/index.md` |
 | Buyer checkout journey and return page | Hosted checkout | `https://docs.seatlayer.io/sell/hosted-checkout/index.md` |
-| Refunds and cancellations | Managed ticketing | `https://docs.seatlayer.io/sell/refunds-and-cancellations/index.md` |
+| Refunds and cancellations | Hosted Ticketing | `https://docs.seatlayer.io/sell/refunds-and-cancellations/index.md` |
 | Counter sales and door scanning | Box office and Door | `https://docs.seatlayer.io/sell/box-office/index.md`, `https://docs.seatlayer.io/sell/door-check-in/index.md`, `https://docs.seatlayer.io/sell/staff-roles/index.md` |
 | Share one complete buyer destination | Hosted Event Page | `https://docs.seatlayer.io/start/choose-an-integration/index.md` |
 | Put managed checkout in an existing site | Managed embed | `https://docs.seatlayer.io/integrations/iframe/index.md` |
@@ -33,7 +33,7 @@ listed live Markdown pages plus any exact reference page discovered through
 | Paste one tag to sell a date, a run of dates or a short pass | What's on widget | `https://docs.seatlayer.io/buyer-sdk/whats-on/index.md` |
 | Publish an organizer site | Organizer Website | `https://docs.seatlayer.io/start/choose-an-integration/index.md` |
 | Event pages in the organizer's brand, on a SeatLayer address or their own domain | Ticket site | `https://docs.seatlayer.io/sell/ticket-site/index.md` |
-| Create SeatLayer-checkout or free events from a server, assign the gateway, go live, booking fee and discount codes | Managed ticketing by API | `https://docs.seatlayer.io/server-api/event-checkout/index.md` |
+| Create SeatLayer-checkout or free events from a server, assign the gateway, go live, booking fee and discount codes | Hosted Ticketing by API | `https://docs.seatlayer.io/server-api/event-checkout/index.md` |
 | Read SeatLayer orders; refund, cancel or resend an event order from a server | Orders API | `https://docs.seatlayer.io/server-api/orders/index.md` |
 | Sell and run a season from the dashboard and SeatLayer pages | Seasons | `https://docs.seatlayer.io/sell/seasons/index.md`, `https://docs.seatlayer.io/sell/season-seats/index.md` |
 | Host owns commerce and fulfilment | Platform/SDK | `https://docs.seatlayer.io/integrations/platforms/index.md` |
@@ -47,7 +47,7 @@ Xendit, Flutterwave, Paystack and iyzico. Buyers pay into the organizer's own
 account. Ticket limits (`maxTicketsPerOrder`, `maxTicketsPerBuyer`) are event
 settings, not checkout code.
 
-For managed ticketing, do not add a host booking endpoint. For Platform/SDK,
+For Hosted Ticketing, do not add a host booking endpoint. For Platform/SDK,
 the host owns checkout and books from its backend. Publishing a hosted page,
 listing an event on a Website, and opening sales are separate explicit actions.
 
