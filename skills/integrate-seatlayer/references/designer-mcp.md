@@ -31,7 +31,6 @@ for integration questions, not chart or event changes.
 | Sales channels, when allowed: allocations, channel prices and sale routes, buyer links and partner report links | |
 | Orders, when allowed: find and read orders, resend tickets, ask an admin to refund or cancel | |
 | Reports, when allowed: sales, money, door counts and the event log | |
-| Event Configurations, where the account has that module (not in the build, events or channels sets) | |
 
 An agent on this server can prepare and publish the map buyers use and run
 events, but it cannot sell a seat, and it cannot refund or charge anyone.
@@ -47,31 +46,28 @@ Selling stays with the Server API and the checkout.
 - The event permissions are: **Create and run events**, **Set prices and
   releases**, **Manage live events**, **Manage sales channels**, **Look after
   orders**, **Read reports** and **Change seat categories**.
-- Every change to an event on sale goes through `plan_inventory_change`. Show
-  the person its summary, and call `apply_inventory_change` with its `planId`
-  only after their yes to that plan. A yes given before the plan is not a yes
-  to it. Held and booked seats never change.
-- Publishing and approval tools need publish permission. Reference, blueprint
-  and capacity tools need the reference-chart feature; Event Configurations need
-  that module on the account.
+- A change to an event on sale is planned first. Show the person the plan, and
+  apply it only after their yes to that plan. A yes given before the plan is not
+  a yes to it. Held and booked seats never change.
+- Publishing and approval tools need publish permission. Tracing a floor
+  plan needs the reference-chart feature on the account.
 - Access tokens expire after an hour and refresh tokens rotate.
-- The server lists only the tools a connection may use: up to 160 with every
-  permission, grouped by area on the live page. Call `get_capabilities` for the
-  actual list; never assume a tool exists.
+- The server lists only what a connection may use. Ask it what the connection
+  allows first; never assume a tool exists.
 
 ## Toolsets
 
-Every listed tool's description is sent to the model on every turn. A host can
+Everything listed is sent to the model on every turn. A host can
 connect with a smaller set by adding `?tools=` to the server URL:
 
-| URL | Tools listed |
+| URL | Use it to |
 |---|---|
-| `https://mcp.seatlayer.io/mcp?tools=build` | 63: build, edit, price, check and publish charts |
-| `?tools=build,trace` | build plus 38: trace a floor-plan image section by section |
-| `?tools=build,3d` | build plus 12: heights, sightlines and seat-view evidence |
-| `?tools=events` | up to 34: event set-up, live controls, reports, prices, orders and the channel reads, plus chart access. Use `?tools=build,events` to edit the chart as well |
-| `?tools=channels` | 16: sales channels and the event tools a channel job needs |
-| `?tools=discover` | 10: `search_tools` finds any other tool, and `run_read_tool` or `run_write_tool` runs it |
+| `https://mcp.seatlayer.io/mcp?tools=build` | Build, edit, price, check and publish charts |
+| `?tools=build,trace` | The same, and build from a floor-plan image |
+| `?tools=build,3d` | The same as build, plus seat heights, sightlines and seat views |
+| `?tools=events` | Event set-up, live controls, reports, prices, orders and the channel reads, plus chart access. Use `?tools=build,events` to edit the chart as well |
+| `?tools=channels` | Sales channels only |
+| `?tools=discover` | A short list; the AI looks up the rest when a request needs it |
 | `?readonly=1` | Only tools that read; a call that changes a chart or an event is refused. Combines with a set, for example `?tools=events&readonly=1` |
 | `https://mcp.seatlayer.io/mcp` or `?tools=all` | Every tool the connection may use |
 
@@ -80,30 +76,31 @@ also refuses writes); the connection's permissions still decide what any call
 may do. Chat hosts such as Claude and ChatGPT use `?tools=build`; a coding agent
 such as Codex can use the plain URL.
 
-The server also offers ready-made prompts: `build_venue`, `edit_chart`,
-`trace-floor-plan`, `check_and_publish`, `apply-chart-feedback`,
-`publish-and-apply`, `block-seats-safely`, `event-day-ops` and `client-report`.
+The server also offers ready-made jobs: build a venue from a description, change
+an existing chart, trace a floor plan, check and publish the chart, apply chart
+feedback, publish and apply, block seats safely, event-day operations and client
+report.
 
 ## Build a new venue from a description
 
 Use the `seatlayer-venue-spec` skill in this toolkit. The agent writes the whole
 venue as one short JSON Venue Spec (categories, prices, stage, rows, tables,
-standing, booths, landmarks, all in words, never coordinates), checks it with
-`build_from_venue_spec` and `checkOnly: true`, then builds it in one call.
+standing, booths, landmarks, all in words, never coordinates), checks it
+first, then builds it in one step.
 Every problem comes back with the field that needs fixing. The same file can be
 pasted into the Designer (**New from → Paste from an AI…**) when no connection
 is available. Format: `https://docs.seatlayer.io/agents/venue-spec/index.md`.
 
 ## Workflow for tracing and review
 
-1. Call `get_capabilities`; do not assume deployed tools or schemas.
+1. Ask the server what this connection allows; do not assume tools or schemas.
 2. Authorize the intended chart or workspace scope.
 3. Treat uploaded plans as private evidence, not authoritative inventory.
 4. Inspect required overview and detail tiles.
 5. Record semantic meaning, confirmed labels/counts, confidence, and open
    questions.
 6. Prefer semantic intents and deterministic SeatLayer compilers over invented
-   coordinates. Use the newest `expectedUpdatedAt` on mutations.
+   coordinates. Make each change from the latest read.
 7. Validate and render every floor after bounded changes.
 8. Prepare the exact immutable revision for review.
 9. Publish only after the user explicitly approves that unchanged revision.
