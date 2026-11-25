@@ -9,7 +9,7 @@ allowed-tools: Read, Write
 Use the `seatlayer-venue-spec` skill for this venue: $ARGUMENTS
 
 Write the Venue Spec. When the `seatlayer-designer` MCP server is connected,
-check it with `build_from_venue_spec` and `checkOnly: true`, compare the summary
+check it without saving first, compare the summary
 with what was asked, and build it only after telling the user it replaces the
 current draft. Without the connection, give the JSON in one code block and say
 where to paste it in the Designer.

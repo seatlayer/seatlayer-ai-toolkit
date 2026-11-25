@@ -157,10 +157,9 @@ manual verification and report skipped checks.
 When the task involves chart authoring or review, or event set-up, prices,
 sales channels, live seat blocks, orders or reports that the connection
 allows, read [references/designer-mcp.md](references/designer-mcp.md). Begin
-with `get_capabilities`, follow the staged semantic workflow, and never
-publish without explicit user authorization. A change to an event on sale goes
-through `plan_inventory_change` and is applied only after the user's yes to
-that plan. To build a new chart from a description of the venue, use the
+by asking the server what the connection allows, follow the staged workflow, and
+never publish without explicit user authorization. A change to an event on sale
+is planned first and applied only after the user's yes to that plan. To build a new chart from a description of the venue, use the
 `seatlayer-venue-spec` skill instead.
 
 The SeatLayer MCP never sells or holds a seat for a buyer, and never refunds or
